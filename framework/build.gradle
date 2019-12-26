@@ -1,0 +1,45 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.9.RELEASE'
+    }
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
+
+targetCompatibility = 1.8
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+    }
+}
+
+def jackson_version = "2.10.1"
+def jackson = [
+        "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-core:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version",
+        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
+]
+dependencies {
+    implementation jackson
+    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'com.google.guava:guava:28.1-jre'
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

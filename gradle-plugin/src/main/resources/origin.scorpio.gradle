@@ -1,0 +1,99 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.9.RELEASE'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'java'
+
+// https://stackoverflow.com/questions/26577805/spring-boot-gradle-plugin-cant-be-found
+// Applying a plugin by plugin id is not supported in script plugins.
+// https://github.com/gradle/gradle/issues/1262
+// Third-party plugins cannot be applied by ID from external build scripts
+apply plugin: org.springframework.boot.gradle.plugin.SpringBootPlugin
+apply plugin: io.spring.gradle.dependencymanagement.DependencyManagementPlugin
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def defaultEncoding = 'UTF-8'
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = defaultEncoding
+[compileJava, compileTestJava]*.options.collect {
+    options -> options.compilerArgs.add '-parameters'
+}
+
+//compileJava.dependsOn clean
+compileJava.options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+
+
+
+clean.doFirst {
+    delete 'build'
+    delete 'dist'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+    }
+}
+
+
+
+def mapstruct_version = "1.3.0.Final"
+def mapstruct = [
+        "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
+        "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+]
+
+def lombok_version = "1.18.10"
+def lombok = [
+        "org.projectlombok:lombok:${lombok_version}"
+]
+
+def jackson_version = "2.10.1"
+def jackson = [
+        "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-core:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version",
+        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
+]
+
+
+def guava_version = '28.1-jre'
+def guava = [
+        "com.google.guava:guava:jar:${guava_version}"
+]
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation lombok, mapstruct, jackson, guava
+
+}
+
+
+

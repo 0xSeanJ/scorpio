@@ -1,0 +1,79 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.9.RELEASE'
+    }
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    group 'io.github.jshanet'
+    version '1.0-SNAPSHOT'
+
+
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
+        mavenCentral()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: "io.spring.dependency-management"
+}
+
+subprojects {
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+        }
+    }
+
+    targetCompatibility = 1.8
+
+    [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+
+    def log4j_version = "2.9.0"
+    def log4j = [
+            "org.apache.logging.log4j:log4j-api:$log4j_version",
+            "org.apache.logging.log4j:log4j-core:$log4j_version",
+            "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version",
+            "org.apache.logging.log4j:log4j-web:$log4j_version"
+    ]
+
+    def mapstruct_version = "1.3.0.Final"
+    def mapstruct = [
+            "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
+            "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+    ]
+
+    def swagger_version = "2.9.2"
+    def swagger = [
+            "io.springfox:springfox-swagger2:${swagger_version}",
+            "io.springfox:springfox-swagger-ui:${swagger_version}"
+    ]
+
+    def lombok_version = "1.18.10"
+    def lombok = [
+            "org.projectlombok:lombok:${lombok_version}"
+    ]
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-devtools'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        implementation lombok, log4j, mapstruct, swagger
+
+        compileOnly 'org.projectlombok:lombok'
+    }
+}
