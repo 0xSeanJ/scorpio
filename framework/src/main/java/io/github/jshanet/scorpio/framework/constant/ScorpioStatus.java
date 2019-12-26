@@ -40,4 +40,11 @@ public class ScorpioStatus {
     }
 
     public static final ScorpioStatus SUCCESS = valueOf("0", "success");
+
+    public static final ScorpioStatus INTERNAL_ERROR = valueOf("-1", "internal error");
+
+    public static final ScorpioStatus SYSTEM_TIMEOUT = valueOf("-2", "system timeout");
+
+    public static final ScorpioStatus INVALID_REQUEST = valueOf("-3", "invalid request");
+
 }

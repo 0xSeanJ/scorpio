@@ -22,6 +22,26 @@ dependencyManagement {
     }
 }
 
+
+def log4j_version = "2.9.0"
+def log4j = [
+        "org.apache.logging.log4j:log4j-api:$log4j_version",
+        "org.apache.logging.log4j:log4j-core:$log4j_version",
+        "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version",
+        "org.apache.logging.log4j:log4j-web:$log4j_version"
+]
+
+def mapstruct_version = "1.3.0.Final"
+def mapstruct = [
+        "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
+        "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+]
+
+def lombok_version = "1.18.10"
+def lombok = [
+        "org.projectlombok:lombok:${lombok_version}"
+]
+
 def jackson_version = "2.10.1"
 def jackson = [
         "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
@@ -30,9 +50,14 @@ def jackson = [
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version",
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
 ]
+
+def apache_commons = [
+        "org.apache.commons:commons-text:1.8",
+        "org.apache.commons:commons-lang3:3.9"
+]
 dependencies {
-    implementation jackson
-    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation jackson, lombok
+    implementation apache_commons
     implementation 'com.google.guava:guava:28.1-jre'
 
     implementation 'org.springframework.boot:spring-boot-starter'
