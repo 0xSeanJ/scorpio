@@ -16,6 +16,7 @@ buildscript {
 repositories {
     mavenCentral()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+    mavenLocal()
 }
 
 apply plugin: 'eclipse'
@@ -80,20 +81,36 @@ def jackson = [
 
 def guava_version = '28.1-jre'
 def guava = [
-        "com.google.guava:guava:jar:${guava_version}"
+        "com.google.guava:guava:${guava_version}"
+]
+
+def scorpio_version = '1.0.0-SNAPSHOT'
+def scorpio = [
+        "io.github.jshanet.scorpio:scorpio-framework:${scorpio_version}"
+]
+
+def apache_commons = [
+        "org.apache.commons:commons-text:1.8",
+        "org.apache.commons:commons-lang3:3.9"
 ]
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation ('org.springframework.boot:spring-boot-starter')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation lombok, mapstruct, jackson, guava
+    implementation lombok, mapstruct, jackson, guava, scorpio, apache_commons
 
 }
 
+configurations {
+
+    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    compile.exclude group: 'log4j', module: 'log4j'
+}
 
 

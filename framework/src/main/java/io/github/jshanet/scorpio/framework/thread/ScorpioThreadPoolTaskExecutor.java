@@ -13,8 +13,6 @@ import java.util.concurrent.*;
  * @author seanjiang
  * @date 2019/12/25
  */
-@Getter
-@Setter
 public class ScorpioThreadPoolTaskExecutor extends ThreadPoolTaskExecutor{
 
     private int queueCapacity = Integer.MAX_VALUE;
@@ -25,6 +23,42 @@ public class ScorpioThreadPoolTaskExecutor extends ThreadPoolTaskExecutor{
 
     private ThreadPoolExecutor threadPoolExecutor;
 
+
+    @Override
+    public void setQueueCapacity(int queueCapacity) {
+        this.queueCapacity = queueCapacity;
+    }
+
+    @Override
+    public void setTaskDecorator(TaskDecorator taskDecorator) {
+        this.taskDecorator = taskDecorator;
+    }
+
+    @Override
+    public void setAllowCoreThreadTimeOut(boolean allowCoreThreadTimeOut) {
+        this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
+    }
+
+    public void setThreadPoolExecutor(ThreadPoolExecutor threadPoolExecutor) {
+        this.threadPoolExecutor = threadPoolExecutor;
+    }
+
+    public int getQueueCapacity() {
+        return queueCapacity;
+    }
+
+    public TaskDecorator getTaskDecorator() {
+        return taskDecorator;
+    }
+
+    public boolean isAllowCoreThreadTimeOut() {
+        return allowCoreThreadTimeOut;
+    }
+
+    @Override
+    public ThreadPoolExecutor getThreadPoolExecutor() {
+        return threadPoolExecutor;
+    }
 
     @Override
     protected ExecutorService initializeExecutor(

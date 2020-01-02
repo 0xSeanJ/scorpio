@@ -56,15 +56,26 @@ def apache_commons = [
         "org.apache.commons:commons-lang3:3.9"
 ]
 dependencies {
-    implementation jackson, lombok
-    implementation apache_commons
-    implementation 'com.google.guava:guava:28.1-jre'
+    compileOnly jackson, lombok
+    compileOnly apache_commons
+    compileOnly 'com.google.guava:guava:28.1-jre'
 
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    compileOnly 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compileOnly 'org.springframework.boot:spring-boot-starter-log4j2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+jar {
+    baseName = 'scorpio-framework'
+    enabled = true
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().getUrl())
+        }
+    }
 }

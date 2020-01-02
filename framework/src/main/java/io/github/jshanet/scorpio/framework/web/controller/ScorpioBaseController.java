@@ -10,10 +10,8 @@ import io.github.jshanet.scorpio.framework.util.ScorpioContextUtil;
 import io.github.jshanet.scorpio.framework.util.SeqUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.method.HandlerMethod;
@@ -45,10 +43,15 @@ public abstract class ScorpioBaseController {
 
     @Autowired
     private RequestMappingHandlerMapping handlerMapping;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     
     private long defaultTimeout = 5_000;
     
-    protected abstract ThreadPoolTaskExecutor getFrontTaskExecutor();
+    protected ThreadPoolTaskExecutor getFrontTaskExecutor() {
+        return threadPoolTaskExecutor;
+    }
 
 
     private Method getRequestMethod(HttpServletRequest servletRequest) throws Exception {
