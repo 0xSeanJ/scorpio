@@ -1,6 +1,6 @@
-package io.github.jshanet.scorpio.framework.exception;
+package io.github.jshanet.scorpio.framework.common.exception;
 
-import io.github.jshanet.scorpio.framework.constant.ScorpioStatus;
+import io.github.jshanet.scorpio.framework.common.constant.ScorpioStatus;
 
 /**
  * @author seanjiang

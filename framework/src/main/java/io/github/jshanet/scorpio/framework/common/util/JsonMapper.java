@@ -1,5 +1,5 @@
 
-package io.github.jshanet.scorpio.framework.util;
+package io.github.jshanet.scorpio.framework.common.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;

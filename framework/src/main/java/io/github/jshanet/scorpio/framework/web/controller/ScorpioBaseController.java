@@ -1,15 +1,15 @@
 package io.github.jshanet.scorpio.framework.web.controller;
 
-import io.github.jshanet.scorpio.framework.constant.ScorpioStatus;
-import io.github.jshanet.scorpio.framework.dto.ScorpioBaseMessage;
-import io.github.jshanet.scorpio.framework.dto.ScorpioRestMessage;
-import io.github.jshanet.scorpio.framework.exception.ScorpioException;
-import io.github.jshanet.scorpio.framework.service.ScorpioServiceExecutor;
-import io.github.jshanet.scorpio.framework.util.JsonMapper;
-import io.github.jshanet.scorpio.framework.util.ScorpioContextUtil;
-import io.github.jshanet.scorpio.framework.util.SeqUtil;
+import io.github.jshanet.scorpio.framework.common.constant.ScorpioStatus;
+import io.github.jshanet.scorpio.framework.common.dto.ScorpioBaseMessage;
+import io.github.jshanet.scorpio.framework.common.dto.ScorpioRestMessage;
+import io.github.jshanet.scorpio.framework.common.exception.ScorpioException;
+import io.github.jshanet.scorpio.framework.common.service.ScorpioServiceExecutor;
+import io.github.jshanet.scorpio.framework.common.util.JsonMapper;
+import io.github.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
+import io.github.jshanet.scorpio.framework.common.util.SeqUtil;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.validation.BindingResult;
@@ -41,14 +41,14 @@ public abstract class ScorpioBaseController {
     
     private static final JsonMapper JSON_MAPPER = JsonMapper.nonDefaultMapper();
 
-    @Autowired
+    @Qualifier("requestMappingHandlerMapping")
     private RequestMappingHandlerMapping handlerMapping;
 
-    @Autowired
+    @Qualifier("threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    
+
     private long defaultTimeout = 5_000;
-    
+
     protected ThreadPoolTaskExecutor getFrontTaskExecutor() {
         return threadPoolTaskExecutor;
     }

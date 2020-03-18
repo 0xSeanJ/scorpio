@@ -17,11 +17,9 @@ allprojects {
 subprojects {
 
     apply plugin: 'maven'
-
-
-
-
-
-
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
 
 }
+

@@ -1,4 +1,4 @@
-package io.github.jshanet.scorpio.framework.dto;
+package io.github.jshanet.scorpio.framework.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

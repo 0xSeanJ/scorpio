@@ -1,4 +1,4 @@
-package io.github.jshanet.scorpio.framework.service;
+package io.github.jshanet.scorpio.framework.common.service;
 
 /**
  * @author seanjiang

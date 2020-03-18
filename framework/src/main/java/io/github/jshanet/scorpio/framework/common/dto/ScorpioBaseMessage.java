@@ -1,8 +1,8 @@
-package io.github.jshanet.scorpio.framework.dto;
+package io.github.jshanet.scorpio.framework.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.jshanet.scorpio.framework.constant.ScorpioStatus;
-import io.github.jshanet.scorpio.framework.util.ScorpioContextUtil;
+import io.github.jshanet.scorpio.framework.common.constant.ScorpioStatus;
+import io.github.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
 import lombok.Data;
 
 /**

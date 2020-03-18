@@ -1,4 +1,4 @@
-package io.github.jshanet.scorpio.framework.util;
+package io.github.jshanet.scorpio.framework.common.util;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;

@@ -1,4 +1,4 @@
-package io.github.jshanet.scorpio.framework.entity;
+package io.github.jshanet.scorpio.framework.common.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;

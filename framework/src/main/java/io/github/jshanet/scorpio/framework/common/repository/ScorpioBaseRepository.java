@@ -1,6 +1,6 @@
-package io.github.jshanet.scorpio.framework.repository;
+package io.github.jshanet.scorpio.framework.common.repository;
 
-import io.github.jshanet.scorpio.framework.entity.ScorpioBaseEntity;
+import io.github.jshanet.scorpio.framework.common.entity.ScorpioBaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;

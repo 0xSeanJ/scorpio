@@ -1,4 +1,4 @@
-package io.github.jshanet.scorpio.framework.constant;
+package io.github.jshanet.scorpio.framework.common.constant;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 

@@ -1,7 +1,5 @@
-package io.github.jshanet.scorpio.framework.thread;
+package io.github.jshanet.scorpio.framework.common.thread;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.tomcat.util.threads.TaskQueue;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;

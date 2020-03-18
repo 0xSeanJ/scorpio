@@ -1,6 +1,6 @@
-package io.github.jshanet.scorpio.framework.service;
+package io.github.jshanet.scorpio.framework.common.service;
 
-import io.github.jshanet.scorpio.framework.exception.ScorpioException;
+import io.github.jshanet.scorpio.framework.common.exception.ScorpioException;
 
 /**
  * @author seanjiang

@@ -1,11 +1,11 @@
 package io.github.jshanet.scorpio.framework.configuration;
 
-import io.github.jshanet.scorpio.framework.thread.ScorpioThreadPoolTaskExecutor;
+import io.github.jshanet.scorpio.framework.common.thread.ScorpioThreadPoolTaskExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2019/12/26
  */
 @Configuration
-public class ScorpioWebMvcConfiguration extends WebMvcConfigurationSupport {
+public class ScorpioWebMvcConfiguration implements WebMvcConfigurer {
 
     @Bean(name = "frontTaskExecutor")
     public ThreadPoolTaskExecutor frontThreadPoolTaskExecutor(

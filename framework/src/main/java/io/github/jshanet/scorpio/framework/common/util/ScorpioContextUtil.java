@@ -1,7 +1,7 @@
-package io.github.jshanet.scorpio.framework.util;
+package io.github.jshanet.scorpio.framework.common.util;
 
-import io.github.jshanet.scorpio.framework.context.ScorpioContext;
-import io.github.jshanet.scorpio.framework.context.ScorpioContextThreadLocal;
+import io.github.jshanet.scorpio.framework.common.context.ScorpioContext;
+import io.github.jshanet.scorpio.framework.common.context.ScorpioContextThreadLocal;
 
 /**
  * @author seanjiang
