@@ -17,9 +17,10 @@ import java.util.Optional;
  * @date 2019/12/25
  */
 @Data
+// AuditingEntityListener 监听器，提供GeneratedValue, CreatedDate, LastModifiedDate 等注解
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class ScorpioBaseEntity {
+public abstract class ScorpioBaseEntity {
 
     @Id
     @GeneratedValue

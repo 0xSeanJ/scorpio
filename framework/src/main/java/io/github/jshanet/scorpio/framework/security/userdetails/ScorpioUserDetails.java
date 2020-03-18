@@ -1,11 +1,12 @@
 package io.github.jshanet.scorpio.framework.security.userdetails;
 
+import io.github.jshanet.scorpio.framework.common.entity.ScorpioBaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class ScorpioUserDetails  implements UserDetails {
+public class ScorpioUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

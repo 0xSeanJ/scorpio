@@ -17,6 +17,7 @@ public class ScorpioContext {
 
     private Locale locale = Locale.CHINESE;
 
+    private String tenantId;
 
 
 }

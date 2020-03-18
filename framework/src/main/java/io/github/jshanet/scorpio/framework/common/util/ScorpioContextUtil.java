@@ -41,4 +41,24 @@ public class ScorpioContextUtil {
         context.setBizSeqNo(bizSeqNo);
 
     }
+
+    public static String getTenantId() {
+        ScorpioContext context = ScorpioContextThreadLocal.get();
+        String tenantId = null;
+        if (context != null) {
+            tenantId = context.getTenantId();
+        }
+        return tenantId;
+    }
+
+    public static void setTenantId(String tenantId) {
+        ScorpioContext context = ScorpioContextThreadLocal.get();
+
+        if (context == null) {
+            context = new ScorpioContext();
+            setContext(context);
+        }
+        context.setTenantId(tenantId);
+
+    }
 }
