@@ -78,6 +78,10 @@ def jackson = [
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
 ]
 
+def lmax_disruptor_version = "3.4.2"
+def lmax_disruptor = [
+        "com.lmax:disruptor:$lmax_disruptor_version"
+]
 
 def guava_version = '28.1-jre'
 def guava = [
@@ -95,14 +99,16 @@ def apache_commons = [
 ]
 
 dependencies {
-    implementation ('org.springframework.boot:spring-boot-starter')
+    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation lombok, mapstruct, jackson, guava, scorpio, apache_commons
+
+    implementation lombok, mapstruct, jackson, guava, scorpio, apache_commons, lmax_disruptor
 
 }
 
@@ -113,4 +119,21 @@ configurations {
     compile.exclude group: 'log4j', module: 'log4j'
 }
 
+bootJar {
+    baseName project.name
+    // 需要外置的配置文件,不放到jar包中,避免冲突。
+    exclude '**/*.properties*'
+    exclude '/*.xml'
+    exclude '/*.ini'
+}
+
+task dist(type: Copy, overwrite: true, dependsOn: ['bootJar']) {
+    destinationDir = new File(projectDir, 'dist')
+    includeEmptyDirs = false
+    into('/app/') { from project.jar.getArchivePath() }
+    into('/scripts/') { from 'src/main/scripts' fileMode 0755 }
+    into('/lib/') {
+        from project.configurations.runtime
+    }
+}
 
