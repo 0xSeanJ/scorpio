@@ -8,10 +8,4 @@ dependencies {
 }
 
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().getUrl())
-        }
-    }
-}
+

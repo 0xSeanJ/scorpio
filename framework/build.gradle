@@ -1,3 +1,5 @@
+archivesBaseName = 'scorpio-framework'
+
 buildscript {
     ext {
         springBootVersion = '2.1.9.RELEASE'
@@ -43,6 +45,11 @@ def jackson = [
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
 ]
 
+def jose4j_version = "0.7.0"
+def jose4j = [
+        "org.bitbucket.b_c:jose4j:${jose4j_version}"
+]
+
 def lmax_disruptor_version = "3.4.2"
 def lmax_disruptor = [
         "com.lmax:disruptor:$lmax_disruptor_version"
@@ -71,18 +78,10 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-security'
     testCompileOnly 'org.springframework.boot:spring-boot-starter-test'
 
-    compileOnly lombok, mapstruct, jackson, guava, apache_commons, lmax_disruptor, mybatis_springboot_starter
+    compileOnly lombok, mapstruct, jackson, guava, apache_commons, lmax_disruptor, mybatis_springboot_starter, jose4j
 
     annotationProcessor lombok
 }
 jar {
-    baseName = 'scorpio-framework'
     enabled = true
-}
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: mavenLocal().getUrl())
-        }
-    }
 }

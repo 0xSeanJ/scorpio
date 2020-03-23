@@ -54,6 +54,12 @@ dependencyManagement {
         mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
     }
 }
+
+def mysql_connector_version = "8.0.12"
+List mysql_connector = [
+        "mysql:mysql-connector-java:$mysql_connector_version"
+]
+
 def mapstruct_version = "1.3.0.Final"
 def mapstruct = [
         "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
@@ -79,10 +85,22 @@ def lmax_disruptor = [
         "com.lmax:disruptor:$lmax_disruptor_version"
 ]
 
+def orika_version = "1.5.2"
+def orika = [
+        "ma.glasnost.orika:orika-core:${orika_version}"
+
+]
+
 def guava_version = '28.1-jre'
 def guava = [
         "com.google.guava:guava:${guava_version}"
 ]
+
+def thymeleaf_layout_dialect_version = "2.4.1"
+def thymeleaf_layout_dialect = [
+        "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleaf_layout_dialect_version}"
+]
+
 
 def scorpio_version = '1.0.0-SNAPSHOT'
 def scorpio = [
@@ -107,7 +125,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation lombok, mapstruct, jackson, guava, scorpio, apache_commons, lmax_disruptor, mybatis_springboot_starter
+    implementation lombok, mapstruct, jackson, guava, apache_commons, lmax_disruptor, orika
+    implementation mybatis_springboot_starter, mysql_connector
+    implementation thymeleaf_layout_dialect
+    implementation scorpio
 
     annotationProcessor lombok
 }
