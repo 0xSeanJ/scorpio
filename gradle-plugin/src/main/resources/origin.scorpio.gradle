@@ -49,96 +49,13 @@ clean.doFirst {
     delete 'dist'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
-    }
-}
 
-def mysql_connector_version = "8.0.12"
-List mysql_connector = [
-        "mysql:mysql-connector-java:$mysql_connector_version"
-]
-
-def mapstruct_version = "1.3.0.Final"
-def mapstruct = [
-        "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
-        "org.mapstruct:mapstruct-processor:${mapstruct_version}"
-]
-
-def lombok_version = "1.18.10"
-def lombok = [
-        "org.projectlombok:lombok:${lombok_version}"
-]
-
-def jackson_version = "2.10.1"
-def jackson = [
-        "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
-        "com.fasterxml.jackson.core:jackson-core:$jackson_version",
-        "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
-        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version",
-        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
-]
-
-def lmax_disruptor_version = "3.4.2"
-def lmax_disruptor = [
-        "com.lmax:disruptor:$lmax_disruptor_version"
-]
-
-def orika_version = "1.5.2"
-def orika = [
-        "ma.glasnost.orika:orika-core:${orika_version}"
-
-]
-
-def guava_version = '28.1-jre'
-def guava = [
-        "com.google.guava:guava:${guava_version}"
-]
-
-def thymeleaf_layout_dialect_version = "2.4.1"
-def thymeleaf_layout_dialect = [
-        "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleaf_layout_dialect_version}"
-]
-
-
-def scorpio_version = '1.0.0-SNAPSHOT'
-def scorpio = [
-        "io.github.jshanet.scorpio:scorpio-framework:${scorpio_version}"
-]
-
-def apache_commons = [
-        "org.apache.commons:commons-text:1.8",
-        "org.apache.commons:commons-lang3:3.9"
-]
-
-def mybatis_springboot_starter = 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1'
-
+def scorpio = "top.jshanet.scorpio:scorpio-framework:+"
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    implementation lombok, mapstruct, jackson, guava, apache_commons, lmax_disruptor, orika
-    implementation mybatis_springboot_starter, mysql_connector
-    implementation thymeleaf_layout_dialect
     implementation scorpio
-
-    annotationProcessor lombok
 }
 
-configurations {
 
-    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    compile.exclude group: 'log4j', module: 'log4j'
-}
 
 bootJar {
     baseName project.name

@@ -24,7 +24,7 @@ dependencyManagement {
     }
 }
 
-
+//  define dependencies
 def mapstruct_version = "1.3.0.Final"
 def mapstruct = [
         "org.mapstruct:mapstruct-jdk8:${mapstruct_version}",
@@ -45,10 +45,13 @@ def jackson = [
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
 ]
 
-def jose4j_version = "0.7.0"
-def jose4j = [
-        "org.bitbucket.b_c:jose4j:${jose4j_version}"
-]
+// json web token library
+//def jose4j_version = "0.7.0"
+//def jose4j = [
+//        "org.bitbucket.b_c:jose4j:${jose4j_version}"
+//]
+def jjwt_version = "0.9.1"
+def jjwt = "io.jsonwebtoken:jjwt:${jjwt_version}"
 
 def lmax_disruptor_version = "3.4.2"
 def lmax_disruptor = [
@@ -60,28 +63,54 @@ def guava = [
         "com.google.guava:guava:${guava_version}"
 ]
 
+def thymeleaf_layout_dialect_version = '2.4.1'
+def thymeleaf_layout_dialect = ["nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleaf_layout_dialect_version}"]
+
+def mysql_connector_version = "8.0.19"
+def mysql_connector = "mysql:mysql-connector-java:${mysql_connector_version}"
+
 def apache_commons = [
         "org.apache.commons:commons-text:1.8",
-        "org.apache.commons:commons-lang3:3.9"
+        "org.apache.commons:commons-lang3:3.9",
+        'org.apache.commons:commons-io:1.3.2',
+        'org.apache.commons:commons-collections4:4.4',
+        'org.apache.commons:commons-compress:1.20',
+        'org.apache.commons:commons-math3:3.6.1',
+        'org.apache.commons:commons-pool2:2.8.0',
+        'org.apache.commons:commons-configuration2:2.7',
+        //'org.apache.commons:commons-csv:1.8',
+        //'org.apache.commons:commons-exec:1.3'
 ]
 
 def mybatis_springboot_starter = 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1'
 
 dependencies {
-    compileOnly 'org.springframework.boot:spring-boot-starter'
-    compileOnly 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.springframework.boot:spring-boot-devtools'
-    compileOnly 'org.springframework.boot:spring-boot-starter-log4j2'
-    compileOnly 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compileOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    compileOnly 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    compileOnly 'org.springframework.boot:spring-boot-starter-security'
-    testCompileOnly 'org.springframework.boot:spring-boot-starter-test'
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-devtools'
+    compile 'org.springframework.boot:spring-boot-starter-log4j2'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 
-    compileOnly lombok, mapstruct, jackson, guava, apache_commons, lmax_disruptor, mybatis_springboot_starter, jose4j
+    compile mapstruct, jackson, guava, apache_commons, lmax_disruptor, thymeleaf_layout_dialect, mysql_connector
+    compile mybatis_springboot_starter, jjwt
 
+    compileOnly lombok
     annotationProcessor lombok
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
+
+configurations {
+    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    compile.exclude group: 'log4j', module: 'log4j'
+}
+
+
 jar {
     enabled = true
 }

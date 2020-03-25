@@ -1,16 +1,7 @@
 package top.jshanet.scorpio.framework.web.controller;
 
-import top.jshanet.scorpio.framework.common.constant.ScorpioStatus;
-import top.jshanet.scorpio.framework.common.dto.ScorpioBaseMessage;
-import top.jshanet.scorpio.framework.common.dto.ScorpioRestMessage;
-import top.jshanet.scorpio.framework.common.exception.ScorpioException;
-import top.jshanet.scorpio.framework.common.service.ScorpioServiceExecutor;
-import top.jshanet.scorpio.framework.common.util.JsonMapper;
-import top.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
-import top.jshanet.scorpio.framework.common.util.SeqUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.validation.BindingResult;
@@ -21,9 +12,18 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
+import top.jshanet.scorpio.framework.common.constant.ScorpioStatus;
+import top.jshanet.scorpio.framework.common.dto.ScorpioBaseMessage;
+import top.jshanet.scorpio.framework.common.dto.ScorpioRestMessage;
+import top.jshanet.scorpio.framework.common.exception.ScorpioException;
+import top.jshanet.scorpio.framework.common.service.ScorpioServiceExecutor;
+import top.jshanet.scorpio.framework.common.util.JsonMapper;
+import top.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
+import top.jshanet.scorpio.framework.common.util.SeqUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,20 +37,26 @@ import java.util.Set;
 @Log4j2
 @SuppressWarnings("unchecked")
 public abstract class ScorpioBaseController {
-    
+
     private static final UrlPathHelper URL_PATH_HELPER = new UrlPathHelper();
-    
+
     private static final JsonMapper JSON_MAPPER = JsonMapper.nonDefaultMapper();
 
-    @Qualifier("requestMappingHandlerMapping")
     @Autowired
     private RequestMappingHandlerMapping handlerMapping;
 
-    @Qualifier("frontTaskExecutor")
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    private long defaultTimeout = 5_000;
+    private long defaultTimeout = 10_000;
+
+    public long getDefaultTimeout() {
+        return defaultTimeout;
+    }
+
+    public void setDefaultTimeout(long defaultTimeout) {
+        this.defaultTimeout = defaultTimeout;
+    }
 
     protected ThreadPoolTaskExecutor getFrontTaskExecutor() {
         return threadPoolTaskExecutor;
@@ -115,6 +121,10 @@ public abstract class ScorpioBaseController {
 
         }
 
+        private boolean isAnnotationOnClassOrMethod(Class<? extends Annotation> c) {
+            return getClass().isAnnotationPresent(c) && method.isAnnotationPresent(c);
+        }
+
         @Override
         public void run() {
             long start = System.currentTimeMillis();
@@ -122,16 +132,26 @@ public abstract class ScorpioBaseController {
             try {
                 T message = serviceExecutor.execute(request);
                 deferredResult.setResult(message);
+                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
+                    log.info("{} SUCCESS:\nlocale: {}\nurl: {}\nrequest: {}\nresponse: {}\n",
+                            method, locale, requestUri, request, message);
+                }
             } catch (ScorpioException e) {
                 T message = (T) new ScorpioBaseMessage();
                 message.setStatus(e.getStatus());
                 deferredResult.setResult(message);
-                log.warn("xxxxxxxx", e);
+                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
+                    log.warn("{} FAIL:\nlocale: {}\nurl: {}\nrequest: {}\nresponse: {}\n",
+                            method, locale, requestUri, request, message, e);
+                }
             } catch (Exception e) {
                 T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
                 errorMessage.setDebugMsg(e.getMessage());
                 deferredResult.setResult(errorMessage);
-                log.error("eeeeeeeeeee", e);
+                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
+                    log.error("{} ERROR:\nlocale: {}\nurl: {}\nrequest: {}\n",
+                            method, locale, requestUri, request, e);
+                }
             } finally {
                 ScorpioContextUtil.unsetContext();
             }
@@ -164,7 +184,7 @@ public abstract class ScorpioBaseController {
             T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
             errorMessage.setDebugMsg(e.getMessage());
             deferredResult.setResult(errorMessage);
-            log.error("request error", e);
+            log.error("controller error", e);
         } finally {
             ScorpioContextUtil.unsetContext();
         }
@@ -194,8 +214,9 @@ public abstract class ScorpioBaseController {
 
     protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
             E request, ScorpioServiceExecutor<E, T> executor) {
-        return execute( request, executor, null);
+        return execute(request, executor, null);
     }
+
 
     protected <T> ScorpioRestMessage<T> toScorpioRestMessage(T t) {
         ScorpioRestMessage<T> restMessage = new ScorpioRestMessage<>();
