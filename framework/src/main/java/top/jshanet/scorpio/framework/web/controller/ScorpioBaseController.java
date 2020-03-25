@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
@@ -25,10 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author seanjiang
@@ -121,37 +120,35 @@ public abstract class ScorpioBaseController {
 
         }
 
-        private boolean isAnnotationOnClassOrMethod(Class<? extends Annotation> c) {
-            return getClass().isAnnotationPresent(c) && method.isAnnotationPresent(c);
+        private boolean enableLog() {
+            return !getClass().isAnnotationPresent(NoControllerLog.class) && !method.isAnnotationPresent(NoControllerLog.class);
         }
 
         @Override
         public void run() {
             long start = System.currentTimeMillis();
+            boolean enableLog = enableLog();
             ScorpioContextUtil.setBizSeqNo(this.bizSeqNo);
             try {
                 T message = serviceExecutor.execute(request);
                 deferredResult.setResult(message);
-                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
-                    log.info("{} SUCCESS:\nlocale: {}\nurl: {}\nrequest: {}\nresponse: {}\n",
-                            method, locale, requestUri, request, message);
+                if (enableLog) {
+                    log.info("{} - request {} SUCCESS, request: {}, response: {}",
+                            ScorpioContextUtil.getBizSeqNo(), requestUri, request, message);
                 }
             } catch (ScorpioException e) {
                 T message = (T) new ScorpioBaseMessage();
                 message.setStatus(e.getStatus());
                 deferredResult.setResult(message);
-                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
-                    log.warn("{} FAIL:\nlocale: {}\nurl: {}\nrequest: {}\nresponse: {}\n",
-                            method, locale, requestUri, request, message, e);
-                }
+                log.info("{} - request {} FAILED, request: {}, response: {}",
+                        ScorpioContextUtil.getBizSeqNo(), requestUri, request, message, e);
+
             } catch (Exception e) {
                 T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
                 errorMessage.setDebugMsg(e.getMessage());
                 deferredResult.setResult(errorMessage);
-                if (!isAnnotationOnClassOrMethod(NoControllerLog.class)) {
-                    log.error("{} ERROR:\nlocale: {}\nurl: {}\nrequest: {}\n",
-                            method, locale, requestUri, request, e);
-                }
+                log.info("{} - request {} FAILED, request: {}",
+                        ScorpioContextUtil.getBizSeqNo(), requestUri, request, e);
             } finally {
                 ScorpioContextUtil.unsetContext();
             }
@@ -159,13 +156,15 @@ public abstract class ScorpioBaseController {
     }
 
     protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
-            HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse,
             E request, ScorpioServiceExecutor<E, T> executor, BindingResult bindingResult,
             long timeout) {
         T timeoutMessage = (T) new ScorpioBaseMessage(ScorpioStatus.SYSTEM_TIMEOUT);
         DeferredResult<T> deferredResult = new DeferredResult<>(timeout, timeoutMessage);
         try {
+            ServletRequestAttributes attributes = ((ServletRequestAttributes)
+                    Objects.requireNonNull(RequestContextHolder.getRequestAttributes()));
+            HttpServletRequest servletRequest = attributes.getRequest();
+            HttpServletResponse servletResponse = attributes.getResponse();
             Method calledMethod = this.getRequestMethod(servletRequest);
             String bizSeqNo = ScorpioContextUtil.getBizSeqNo() == null ? SeqUtil.nextValue() : ScorpioContextUtil.getBizSeqNo();
             if (bindingResult != null && bindingResult.hasErrors()) {
@@ -194,22 +193,8 @@ public abstract class ScorpioBaseController {
     }
 
     protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
-            HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse,
             E request, ScorpioServiceExecutor<E, T> executor, BindingResult bindingResult) {
-        return execute(servletRequest, servletResponse, request, executor, bindingResult, defaultTimeout);
-    }
-
-    protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
-            HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse,
-            E request, ScorpioServiceExecutor<E, T> executor) {
-        return execute(servletRequest, servletResponse, request, executor, null);
-    }
-
-    protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
-            E request, ScorpioServiceExecutor<E, T> executor, BindingResult bindingResult) {
-        return execute(null, null, request, executor, bindingResult);
+        return execute(request, executor, bindingResult, defaultTimeout);
     }
 
     protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
@@ -217,32 +202,24 @@ public abstract class ScorpioBaseController {
         return execute(request, executor, null);
     }
 
-
-    protected <T> ScorpioRestMessage<T> toScorpioRestMessage(T t) {
-        ScorpioRestMessage<T> restMessage = new ScorpioRestMessage<>();
-        restMessage.setResult(t);
-        return restMessage;
+    protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(ScorpioServiceExecutor<E, T> executor) {
+        return execute(null, executor);
     }
 
-    protected <T> ScorpioRestMessage<T> toScorpioRestMessage(Page<T> tList) {
-        ScorpioRestMessage<T> restMessage = new ScorpioRestMessage<>();
-        restMessage.setData(tList.getContent());
-        restMessage.setCount(tList.getTotalElements());
-        return restMessage;
+    protected <T> ScorpioRestMessage<T> toRestMessage(T t) {
+        return ScorpioRestMessage.from(t);
     }
 
-    protected <T> ScorpioRestMessage<T> toScorpioRestMessage(List<T> tList) {
-        ScorpioRestMessage<T> restMessage = new ScorpioRestMessage<>();
-        restMessage.setData(tList);
-        restMessage.setCount((long) tList.size());
-        return restMessage;
+    protected <T> ScorpioRestMessage<T> toRestMessage(Page<T> tPage) {
+        return ScorpioRestMessage.from(tPage);
     }
 
-    protected <T> ScorpioRestMessage<T> toScorpioRestMessage(Set<T> tSet) {
-        ScorpioRestMessage<T> restMessage = new ScorpioRestMessage<>();
-        restMessage.setData(new ArrayList<>(tSet));
-        restMessage.setCount((long) tSet.size());
-        return restMessage;
+    protected <T> ScorpioRestMessage<T> toRestMessage(List<T> tList) {
+        return ScorpioRestMessage.from(tList);
+    }
+
+    protected <T> ScorpioRestMessage<T> toRestMessage(Set<T> tSet) {
+        return ScorpioRestMessage.from(tSet);
     }
 
 }
