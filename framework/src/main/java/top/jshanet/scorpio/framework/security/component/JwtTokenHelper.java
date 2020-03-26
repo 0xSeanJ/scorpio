@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.framework.security.service;
+package top.jshanet.scorpio.framework.security.component;
 
 
 import io.jsonwebtoken.Claims;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import top.jshanet.scorpio.framework.security.autoconfig.JwtSecurityProperties;
+import top.jshanet.scorpio.framework.security.autoconfig.properties.JwtSecurityProperties;
 import top.jshanet.scorpio.framework.security.domain.JwtAuthenticationToken;
 import top.jshanet.scorpio.framework.security.domain.UserCredentials;
 
@@ -17,18 +17,18 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-public class JwtTokenService {
+public class JwtTokenHelper {
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     private final JwtSecurityProperties jwtSecurityProperties;
 
     @Autowired
-    public JwtTokenService(JwtSecurityProperties jwtSecurityProperties) {
+    public JwtTokenHelper(JwtSecurityProperties jwtSecurityProperties) {
         this.jwtSecurityProperties = jwtSecurityProperties;
     }
 
-    JwtAuthenticationToken generateToken(UserDetails userDetails) {
+    public JwtAuthenticationToken generateToken(UserDetails userDetails) {
         Date expirationDate = generateExpirationDate();
         String token = Jwts.builder()
                 .setIssuer(jwtSecurityProperties.getIssuer())

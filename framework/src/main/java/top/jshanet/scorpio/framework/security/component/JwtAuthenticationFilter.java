@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.jshanet.scorpio.framework.security.domain.UserCredentials;
-import top.jshanet.scorpio.framework.security.service.JwtTokenService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,22 +21,22 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenHelper jwtTokenHelper;
     private final JwtAuthenticationEntryPoint entryPoint;
 
     @Autowired
     public JwtAuthenticationFilter(UserDetailsService userDetailsService,
-                                   JwtTokenService jwtTokenService,
+                                   JwtTokenHelper jwtTokenHelper,
                                    JwtAuthenticationEntryPoint entryPoint) {
         this.userDetailsService = userDetailsService;
-        this.jwtTokenService = jwtTokenService;
+        this.jwtTokenHelper = jwtTokenHelper;
         this.entryPoint = entryPoint;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = jwtTokenService.getAuthToken(request);
+            String token = jwtTokenHelper.getAuthToken(request);
 
             if (token == null) {
                 filterChain.doFilter(request, response);
@@ -53,9 +52,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void restoreAuthentication(HttpServletRequest request, String token) {
-        UserCredentials credentials = jwtTokenService.getUserCredentialsFromToken(token);
+        UserCredentials credentials = jwtTokenHelper.getUserCredentialsFromToken(token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
-        if(jwtTokenService.validateToken(token, userDetails)) {
+        if(jwtTokenHelper.validateToken(token, userDetails)) {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             userDetails.getUsername(), token, userDetails.getAuthorities());

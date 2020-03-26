@@ -1,0 +1,43 @@
+package top.jshanet.scorpio.framework.security.service;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+import top.jshanet.scorpio.framework.security.component.JwtTokenHelper;
+import top.jshanet.scorpio.framework.security.domain.JwtAuthenticationToken;
+import top.jshanet.scorpio.framework.security.domain.UserCredentials;
+
+@Service
+public class JwtAuthenticationService {
+
+    private final AuthenticationManager authenticationManager;
+
+    private final UserDetailsService userDetailsService;
+
+    private final JwtTokenHelper tokenHelper;
+
+    public JwtAuthenticationService(AuthenticationManager authenticationManager,
+                                    UserDetailsService userDetailsService,
+                                    JwtTokenHelper tokenHelper) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.tokenHelper = tokenHelper;
+    }
+
+    public JwtAuthenticationToken authenticate(UserCredentials userCredentials) {
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userCredentials.getUsername(),
+                        userCredentials.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userDetailsService.loadUserByUsername((String) authentication.getPrincipal());
+        return tokenHelper.generateToken(userDetails);
+    }
+}

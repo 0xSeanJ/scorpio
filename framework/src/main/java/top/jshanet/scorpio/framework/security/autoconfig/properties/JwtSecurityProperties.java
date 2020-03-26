@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.framework.security.autoconfig;
+package top.jshanet.scorpio.framework.security.autoconfig.properties;
 
 import lombok.Getter;
 import lombok.Setter;

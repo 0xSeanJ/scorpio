@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
  */
 public class ScorpioStatus {
 
-    private String code;
+    private int code;
 
     private String msg;
 
@@ -16,17 +16,17 @@ public class ScorpioStatus {
 
     }
 
-    protected ScorpioStatus(String code, String msg) {
+    protected ScorpioStatus(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public static ScorpioStatus valueOf(String code, String msg) {
+    public static ScorpioStatus valueOf(int code, String msg) {
         return new ScorpioStatus(code, msg);
     }
 
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
@@ -39,12 +39,13 @@ public class ScorpioStatus {
         return new ReflectionToStringBuilder(this).toString();
     }
 
-    public static final ScorpioStatus SUCCESS = valueOf("0", "success");
+    public static final ScorpioStatus SUCCESS = valueOf(0, "success");
 
-    public static final ScorpioStatus INTERNAL_ERROR = valueOf("-1", "internal error");
+    public static final ScorpioStatus INTERNAL_ERROR = valueOf(-1, "internal error");
 
-    public static final ScorpioStatus SYSTEM_TIMEOUT = valueOf("-2", "system timeout");
+    public static final ScorpioStatus SYSTEM_TIMEOUT = valueOf(-2, "system timeout");
 
-    public static final ScorpioStatus INVALID_REQUEST = valueOf("-3", "invalid request");
+    public static final ScorpioStatus INVALID_REQUEST = valueOf(-3, "invalid request");
+
 
 }

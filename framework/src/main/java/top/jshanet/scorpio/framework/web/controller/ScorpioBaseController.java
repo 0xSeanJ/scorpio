@@ -169,7 +169,7 @@ public abstract class ScorpioBaseController {
             String bizSeqNo = ScorpioContextUtil.getBizSeqNo() == null ? SeqUtil.nextValue() : ScorpioContextUtil.getBizSeqNo();
             if (bindingResult != null && bindingResult.hasErrors()) {
                 T validationMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INVALID_REQUEST);
-                validationMessage.setDebugMsg(bindingResult.getFieldError().getField() + bindingResult.getFieldError().getDefaultMessage());
+                validationMessage.setDebugMsg(Objects.requireNonNull(bindingResult.getFieldError()).getField() + bindingResult.getFieldError().getDefaultMessage());
                 deferredResult.setResult(validationMessage);
                 return deferredResult;
             }
@@ -183,7 +183,7 @@ public abstract class ScorpioBaseController {
             T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
             errorMessage.setDebugMsg(e.getMessage());
             deferredResult.setResult(errorMessage);
-            log.error("controller error", e);
+            log.error("scorpio error", e);
         } finally {
             ScorpioContextUtil.unsetContext();
         }

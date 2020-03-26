@@ -1,6 +1,5 @@
 package top.jshanet.scorpio.framework.security.autoconfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import top.jshanet.scorpio.framework.security.autoconfig.properties.JwtSecurityProperties;
 import top.jshanet.scorpio.framework.security.component.JwtAuthenticationEntryPoint;
 import top.jshanet.scorpio.framework.security.component.JwtAuthenticationFilter;
 
