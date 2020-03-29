@@ -8,6 +8,6 @@ import top.jshanet.scorpio.framework.common.exception.ScorpioException;
  */
 @FunctionalInterface
 public interface ScorpioServiceExecutor<E, T> {
-    T execute(E request) throws ScorpioException;
 
+    T execute(E request) throws ScorpioException;
 }

@@ -37,7 +37,7 @@ public class JwtAuthenticationService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = userDetailsService.loadUserByUsername((String) authentication.getPrincipal());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userCredentials.getUsername());
         return tokenHelper.generateToken(userDetails);
     }
 }

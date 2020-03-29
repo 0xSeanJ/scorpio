@@ -1,6 +1,8 @@
 package top.jshanet.scorpio.framework.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import top.jshanet.scorpio.framework.common.constant.ScorpioStatus;
 import top.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
 import lombok.Data;
@@ -9,11 +11,12 @@ import lombok.Data;
  * @author seanjiang
  * @date 2019/12/25
  */
-@Data
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ScorpioBaseMessage extends ScorpioBaseDTO {
 
-    private String code;
+    private int code;
 
     private String msg;
 

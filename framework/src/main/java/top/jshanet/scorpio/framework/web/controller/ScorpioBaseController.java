@@ -156,8 +156,11 @@ public abstract class ScorpioBaseController {
     }
 
     protected <E, T extends ScorpioBaseMessage> DeferredResult<T> execute(
-            E request, ScorpioServiceExecutor<E, T> executor, BindingResult bindingResult,
-            long timeout) {
+            E request,
+            ScorpioServiceExecutor<E, T> executor,
+            BindingResult bindingResult,
+            long timeout
+    ) {
         T timeoutMessage = (T) new ScorpioBaseMessage(ScorpioStatus.SYSTEM_TIMEOUT);
         DeferredResult<T> deferredResult = new DeferredResult<>(timeout, timeoutMessage);
         try {
