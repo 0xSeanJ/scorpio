@@ -2,6 +2,7 @@ package top.jshanet.scorpio.framework.security.component;
 
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class JwtTokenHelper {
         return null;
     }
 
-    public UserCredentials getUserCredentialsFromToken(String token) {
+    public UserCredentials getUserCredentialsFromToken(String token) throws JwtException {
         Claims claims = parseAuthToken(token);
         UserCredentials userCredentials = new UserCredentials();
         userCredentials.setUsername(claims.getSubject());
@@ -63,12 +64,12 @@ public class JwtTokenHelper {
         return userCredentials;
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) throws JwtException {
         return getUserCredentialsFromToken(token).getUsername()
                 .equals(userDetails.getUsername());
     }
 
-    private Claims parseAuthToken(String token) {
+    private Claims parseAuthToken(String token) throws JwtException {
         return Jwts.parser()
                 .setSigningKey(jwtSecurityProperties.getSecret())
                 .parseClaimsJws(token)

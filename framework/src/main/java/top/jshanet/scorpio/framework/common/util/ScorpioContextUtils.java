@@ -7,7 +7,7 @@ import top.jshanet.scorpio.framework.common.context.ScorpioContextThreadLocal;
  * @author seanjiang
  * @date 2019/12/25
  */
-public class ScorpioContextUtil {
+public class ScorpioContextUtils {
 
     public static void setContext(ScorpioContext weBankContext) {
         ScorpioContextThreadLocal.set(weBankContext);

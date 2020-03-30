@@ -20,12 +20,11 @@ import top.jshanet.scorpio.framework.common.dto.ScorpioRestMessage;
 import top.jshanet.scorpio.framework.common.exception.ScorpioException;
 import top.jshanet.scorpio.framework.common.service.ScorpioServiceExecutor;
 import top.jshanet.scorpio.framework.common.util.JsonMapper;
-import top.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
-import top.jshanet.scorpio.framework.common.util.SeqUtil;
+import top.jshanet.scorpio.framework.common.util.ScorpioContextUtils;
+import top.jshanet.scorpio.framework.common.util.SeqUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -128,29 +127,29 @@ public abstract class ScorpioBaseController {
         public void run() {
             long start = System.currentTimeMillis();
             boolean enableLog = enableLog();
-            ScorpioContextUtil.setBizSeqNo(this.bizSeqNo);
+            ScorpioContextUtils.setBizSeqNo(this.bizSeqNo);
             try {
                 T message = serviceExecutor.execute(request);
                 deferredResult.setResult(message);
                 if (enableLog) {
                     log.info("{} - request {} SUCCESS, request: {}, response: {}",
-                            ScorpioContextUtil.getBizSeqNo(), requestUri, request, message);
+                            ScorpioContextUtils.getBizSeqNo(), requestUri, request, message);
                 }
             } catch (ScorpioException e) {
                 T message = (T) new ScorpioBaseMessage();
                 message.setStatus(e.getStatus());
                 deferredResult.setResult(message);
                 log.info("{} - request {} FAILED, request: {}, response: {}",
-                        ScorpioContextUtil.getBizSeqNo(), requestUri, request, message, e);
+                        ScorpioContextUtils.getBizSeqNo(), requestUri, request, message, e);
 
             } catch (Exception e) {
                 T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
                 errorMessage.setDebugMsg(e.getMessage());
                 deferredResult.setResult(errorMessage);
                 log.info("{} - request {} FAILED, request: {}",
-                        ScorpioContextUtil.getBizSeqNo(), requestUri, request, e);
+                        ScorpioContextUtils.getBizSeqNo(), requestUri, request, e);
             } finally {
-                ScorpioContextUtil.unsetContext();
+                ScorpioContextUtils.unsetContext();
             }
         }
     }
@@ -169,7 +168,7 @@ public abstract class ScorpioBaseController {
             HttpServletRequest servletRequest = attributes.getRequest();
             HttpServletResponse servletResponse = attributes.getResponse();
             Method calledMethod = this.getRequestMethod(servletRequest);
-            String bizSeqNo = ScorpioContextUtil.getBizSeqNo() == null ? SeqUtil.nextValue() : ScorpioContextUtil.getBizSeqNo();
+            String bizSeqNo = ScorpioContextUtils.getBizSeqNo() == null ? SeqUtils.nextValue() : ScorpioContextUtils.getBizSeqNo();
             if (bindingResult != null && bindingResult.hasErrors()) {
                 T validationMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INVALID_REQUEST);
                 validationMessage.setDebugMsg(Objects.requireNonNull(bindingResult.getFieldError()).getField() + bindingResult.getFieldError().getDefaultMessage());
@@ -188,7 +187,7 @@ public abstract class ScorpioBaseController {
             deferredResult.setResult(errorMessage);
             log.error("scorpio error", e);
         } finally {
-            ScorpioContextUtil.unsetContext();
+            ScorpioContextUtils.unsetContext();
         }
 
         return deferredResult;

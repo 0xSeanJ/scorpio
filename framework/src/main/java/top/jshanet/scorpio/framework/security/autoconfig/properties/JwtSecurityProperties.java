@@ -20,4 +20,5 @@ public class JwtSecurityProperties {
     private String issuer = "app";
 
     private long tokenValidityInSeconds = 1800;
+
 }

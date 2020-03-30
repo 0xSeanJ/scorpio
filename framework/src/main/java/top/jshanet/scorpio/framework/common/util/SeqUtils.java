@@ -18,7 +18,7 @@ import java.util.zip.CRC32;
  *
  */
 @Log4j2
-public class SeqUtil {
+public class SeqUtils {
 
     private static final FastDateFormat FAST_DATE_FORMAT = FastDateFormat.getInstance("yyyyMMddHHmmssSSS");
 

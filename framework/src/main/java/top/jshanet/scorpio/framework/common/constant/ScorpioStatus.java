@@ -47,5 +47,9 @@ public class ScorpioStatus {
 
     public static final ScorpioStatus INVALID_REQUEST = valueOf(-3, "invalid request");
 
+    public static final ScorpioStatus AUTHENTICATION_FAIL = valueOf(-5, "authentication fail");
+
+    public static final ScorpioStatus ACCESS_DENIED = valueOf(-5, "access denied");
+
 
 }

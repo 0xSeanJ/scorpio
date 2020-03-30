@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import top.jshanet.scorpio.framework.common.constant.ScorpioStatus;
-import top.jshanet.scorpio.framework.common.util.ScorpioContextUtil;
-import lombok.Data;
+import top.jshanet.scorpio.framework.common.util.ScorpioContextUtils;
 
 /**
  * @author seanjiang
@@ -22,7 +21,7 @@ public class ScorpioBaseMessage extends ScorpioBaseDTO {
 
     private String debugMsg;
 
-    private String bizSeqNo = ScorpioContextUtil.getBizSeqNo();
+    private String bizSeqNo = ScorpioContextUtils.getBizSeqNo();
 
     public ScorpioBaseMessage() {
         this.code = ScorpioStatus.SUCCESS.getCode();

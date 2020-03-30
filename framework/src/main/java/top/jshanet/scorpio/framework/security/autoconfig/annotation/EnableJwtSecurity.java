@@ -21,7 +21,6 @@ import java.lang.annotation.*;
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 @Import({
         JwtAuthenticationFilter.class,
-        JwtAuthenticationEntryPoint.class,
         JwtTokenHelper.class,
         JwtSecurityAutoConfiguration.class,
         JwtAuthenticationService.class,
