@@ -1,5 +1,6 @@
 package top.jshanet.scorpio.framework.security.component;
 
+import groovy.util.logging.Log4j2;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Log4j2
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -39,9 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ScorpioAuthenticationException, ServletException, IOException {
         String token = jwtTokenHelper.getAuthToken(request);
         if (!StringUtils.isEmpty(token)) {
+            try {
+                restoreAuthentication(request, token);
+            } catch (Exception e) {
 
-            restoreAuthentication(request, token);
-
+            }
         }
         filterChain.doFilter(request, response);
     }

@@ -1,10 +1,7 @@
 package top.jshanet.scorpio.framework.security.component;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,7 +61,7 @@ public class JwtTokenHelper {
         return userCredentials;
     }
 
-    public boolean validateToken(String token, UserDetails userDetails) throws JwtException {
+    public boolean validateToken(String token, UserDetails userDetails) throws ExpiredJwtException {
         return getUserCredentialsFromToken(token).getUsername()
                 .equals(userDetails.getUsername());
     }

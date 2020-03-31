@@ -1,5 +1,6 @@
 package top.jshanet.scorpio.framework.common.util;
 
+import org.springframework.security.core.Authentication;
 import top.jshanet.scorpio.framework.common.context.ScorpioContext;
 import top.jshanet.scorpio.framework.common.context.ScorpioContextThreadLocal;
 
@@ -60,5 +61,23 @@ public class ScorpioContextUtils {
         }
         context.setTenantId(tenantId);
 
+    }
+
+    public static void setAuthentication(Authentication authentication) {
+        ScorpioContext context = ScorpioContextThreadLocal.get();
+        if (context == null) {
+            context = new ScorpioContext();
+            setContext(context);
+        }
+        context.setAuthentication(authentication);
+    }
+
+    public static Authentication getAuthentication() {
+        ScorpioContext context = ScorpioContextThreadLocal.get();
+        Authentication authentication = null;
+        if (context != null) {
+            authentication = context.getAuthentication();
+        }
+        return authentication;
     }
 }

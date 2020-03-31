@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -69,27 +71,38 @@ public class JwtSecurityAutoConfiguration {
 
         private final AccessDeniedHandler accessDeniedHandler;
 
+        private final JwtSecurityProperties properties;
+
 
         public JwtWebSecurity(JwtAuthenticationFilter jwtAuthFilter,
                               PasswordEncoder passwordEncoder,
                               UserDetailsService userDetailsService,
-                              AuthenticationEntryPoint authenticationEntryPoint, AccessDeniedHandler accessDeniedHandler) {
+                              AuthenticationEntryPoint authenticationEntryPoint,
+                              AccessDeniedHandler accessDeniedHandler, JwtSecurityProperties properties) {
             this.jwtAuthFilter = jwtAuthFilter;
             this.passwordEncoder = passwordEncoder;
             this.userDetailsService = userDetailsService;
             this.authenticationEntryPoint = authenticationEntryPoint;
             this.accessDeniedHandler = accessDeniedHandler;
+            this.properties = properties;
         }
 
         @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                    .userDetailsService(userDetailsService)
-                    .passwordEncoder(passwordEncoder);
+        protected void configure(AuthenticationManagerBuilder auth) {
+            auth.authenticationProvider(authenticationProvider());
         }
 
         @Bean
-        CorsConfigurationSource corsConfigurationSource() {
+        public DaoAuthenticationProvider authenticationProvider() {
+            DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+            provider.setHideUserNotFoundExceptions(properties.isHideUserNotFoundExceptions());
+            provider.setUserDetailsService(userDetailsService);
+            provider.setPasswordEncoder(passwordEncoder);
+            return provider;
+        }
+
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedHeaders(Collections.singletonList("*"));
             configuration.setAllowedOrigins(Collections.singletonList("*"));
@@ -118,7 +131,7 @@ public class JwtSecurityAutoConfiguration {
                     .and()
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/auth").permitAll()
+                    .antMatchers("/user/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .exceptionHandling()

@@ -4,6 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -128,6 +130,8 @@ public abstract class ScorpioBaseController {
             long start = System.currentTimeMillis();
             boolean enableLog = enableLog();
             ScorpioContextUtils.setBizSeqNo(this.bizSeqNo);
+            ScorpioContextUtils.setAuthentication(SecurityContextHolder.getContext().getAuthentication());
+
             try {
                 T message = serviceExecutor.execute(request);
                 deferredResult.setResult(message);
@@ -177,10 +181,10 @@ public abstract class ScorpioBaseController {
             }
             DeferredResultRunnable<E, T> runnable = new DeferredResultRunnable<>(
                     bizSeqNo, deferredResult, servletRequest, servletResponse, calledMethod, request, executor);
-            getFrontTaskExecutor().submit(runnable);
-//            DelegatingSecurityContextAsyncTaskExecutor securityContextAsyncTaskExecutor =
-//                    new DelegatingSecurityContextAsyncTaskExecutor(frontTaskExecutor, SecurityContextHolder.getContext());
-//            securityContextAsyncTaskExecutor.submit(runnable);
+//            getFrontTaskExecutor().submit(runnable);
+            DelegatingSecurityContextAsyncTaskExecutor securityContextAsyncTaskExecutor =
+                    new DelegatingSecurityContextAsyncTaskExecutor(getFrontTaskExecutor(), SecurityContextHolder.getContext());
+            securityContextAsyncTaskExecutor.submit(runnable);
         } catch (Exception e) {
             T errorMessage = (T) new ScorpioBaseMessage(ScorpioStatus.INTERNAL_ERROR);
             errorMessage.setDebugMsg(e.getMessage());

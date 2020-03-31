@@ -21,4 +21,6 @@ public class JwtSecurityProperties {
 
     private long tokenValidityInSeconds = 1800;
 
+    private boolean hideUserNotFoundExceptions = true;
+
 }

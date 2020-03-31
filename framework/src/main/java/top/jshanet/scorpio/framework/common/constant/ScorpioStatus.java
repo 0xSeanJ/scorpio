@@ -49,7 +49,11 @@ public class ScorpioStatus {
 
     public static final ScorpioStatus AUTHENTICATION_FAIL = valueOf(-5, "authentication fail");
 
-    public static final ScorpioStatus ACCESS_DENIED = valueOf(-5, "access denied");
+    public static final ScorpioStatus ACCESS_DENIED = valueOf(-6, "access denied");
+
+    public static final ScorpioStatus USER_NOT_FOUND = valueOf(-7, "user not found");
+
+    public static final ScorpioStatus INCORRECT_USER_CREDENTIAL = valueOf(-8, "incorrect user credential");
 
 
 }
