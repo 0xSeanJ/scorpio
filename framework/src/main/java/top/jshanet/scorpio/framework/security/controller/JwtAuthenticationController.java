@@ -29,7 +29,7 @@ public class JwtAuthenticationController extends ScorpioBaseController {
         this.properties = properties;
     }
 
-    @PostMapping("/user/auth")
+    @PostMapping("/users/auth")
     public DeferredResult<ScorpioRestMessage<JwtAuthenticationToken>> authenticate(
             @RequestBody UserCredentials userCredentials) {
         return execute(userCredentials, request -> toRestMessage(authenticationService.authenticate(request)));

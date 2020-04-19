@@ -1,17 +1,16 @@
 package top.jshanet.scorpio.framework.security.autoconfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.userdetails.DaoAuthenticationConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,7 +30,10 @@ import top.jshanet.scorpio.framework.security.component.JwtAuthenticationEntryPo
 import top.jshanet.scorpio.framework.security.component.JwtAuthenticationFilter;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+@AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 @Configuration
 @ConditionalOnClass({
         WebSecurityConfigurerAdapter.class,
@@ -40,25 +42,22 @@ import java.util.Collections;
 public class JwtSecurityAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new JwtAuthenticationEntryPoint();
     }
 
     @Bean
-    @ConditionalOnMissingBean(AccessDeniedHandler.class)
     public AccessDeniedHandler accessDeniedHandler() {
         return new JwtAccessDeniedHandler();
     }
 
+
     @Configuration
-    @Order(Integer.MIN_VALUE)
     protected static class JwtWebSecurity extends WebSecurityConfigurerAdapter {
 
         private final JwtAuthenticationFilter jwtAuthFilter;
@@ -122,6 +121,17 @@ public class JwtSecurityAutoConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+            for (Map.Entry<String, List<String>> entry: properties.getAntMatchers().entrySet()){
+                String method = entry.getKey().toUpperCase();
+                if (method.equals("ANY")) {
+                    http.authorizeRequests().antMatchers(
+                            entry.getValue().toArray(new String[entry.getValue().size()])).permitAll();
+                } else {
+                    http.authorizeRequests().antMatchers(HttpMethod.resolve(method),
+                            entry.getValue().toArray(new String[entry.getValue().size()])
+                    ).permitAll();
+                }
+            }
             http
                     .csrf().disable()
                     .cors()
@@ -131,7 +141,7 @@ public class JwtSecurityAutoConfiguration {
                     .and()
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/user/auth").permitAll()
+                    .antMatchers("/users/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .exceptionHandling()

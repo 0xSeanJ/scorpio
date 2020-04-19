@@ -165,7 +165,7 @@ public class JsonMapper {
      * @param jsonString json串
      * @param object 对象
      */
-    public void update(String jsonString, Object object) {
+    public void update(String jsonString, Object object) throws IOException {
         try {
             mapper.readerForUpdating(object).readValue(jsonString);
         } catch (JsonProcessingException e) {

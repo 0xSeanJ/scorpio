@@ -51,11 +51,81 @@ clean.doFirst {
 
 
 def scorpio = "top.jshanet.scorpio:scorpio-framework:+"
+
+def orika ='ma.glasnost.orika:orika-core:1.5.4'
+
+def lombok_version = "1.18.10"
+def lombok = [
+        "org.projectlombok:lombok:${lombok_version}"
+]
+
+// json web token library
+//def jose4j_version = "0.7.0"
+//def jose4j = [
+//        "org.bitbucket.b_c:jose4j:${jose4j_version}"
+//]
+def jjwt_version = "0.9.1"
+def jjwt = "io.jsonwebtoken:jjwt:${jjwt_version}"
+
+def lmax_disruptor_version = "3.4.2"
+def lmax_disruptor = [
+        "com.lmax:disruptor:$lmax_disruptor_version"
+]
+
+def guava_version = '28.1-jre'
+def guava = [
+        "com.google.guava:guava:${guava_version}"
+]
+
+def thymeleaf_layout_dialect_version = '2.4.1'
+def thymeleaf_layout_dialect = ["nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:${thymeleaf_layout_dialect_version}"]
+
+def mysql_connector_version = "8.0.19"
+def mysql_connector = "mysql:mysql-connector-java:${mysql_connector_version}"
+
+def page_helper_version = "1.2.13"
+def page_helper = "com.github.pagehelper:pagehelper-spring-boot-starter:${page_helper_version}"
+
+def apache_commons = [
+        "org.apache.commons:commons-text:1.8",
+        "org.apache.commons:commons-lang3:3.9",
+        'org.apache.commons:commons-collections4:4.4',
+        'org.apache.commons:commons-compress:1.20',
+        'org.apache.commons:commons-math3:3.6.1',
+        'org.apache.commons:commons-pool2:2.8.0',
+        'org.apache.commons:commons-configuration2:2.7',
+        //'org.apache.commons:commons-csv:1.8',
+        //'org.apache.commons:commons-exec:1.3'
+        'commons-io:commons-io:2.6'
+]
+
+def mybatis_springboot_starter = 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1'
+
+
 dependencies {
     implementation scorpio
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation orika, guava, apache_commons, lmax_disruptor, thymeleaf_layout_dialect, mysql_connector
+    implementation mybatis_springboot_starter, jjwt, page_helper
+
 }
 
+configurations {
 
+    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    compile.exclude group: 'log4j', module: 'log4j'
+}
 
 bootJar {
     baseName project.name

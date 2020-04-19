@@ -38,15 +38,6 @@ def lombok = [
         "org.projectlombok:lombok:${lombok_version}"
 ]
 
-def jackson_version = "2.10.1"
-def jackson = [
-        "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
-        "com.fasterxml.jackson.core:jackson-core:$jackson_version",
-        "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
-        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version",
-        "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$jackson_version"
-]
-
 // json web token library
 //def jose4j_version = "0.7.0"
 //def jose4j = [
@@ -90,24 +81,23 @@ def apache_commons = [
 def mybatis_springboot_starter = 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1'
 
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter'
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.springframework.boot:spring-boot-devtools'
-    compile 'org.springframework.boot:spring-boot-starter-log4j2'
-    compile 'org.springframework.boot:spring-boot-starter-aop'
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    compile 'org.springframework.boot:spring-boot-starter-security'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    compile orika, jackson, guava, apache_commons, lmax_disruptor, thymeleaf_layout_dialect, mysql_connector
-    compile mybatis_springboot_starter, jjwt, page_helper
+    implementation orika, guava, apache_commons, lmax_disruptor, thymeleaf_layout_dialect, mysql_connector
+    implementation mybatis_springboot_starter, jjwt, page_helper
 
     compileOnly lombok
     annotationProcessor lombok
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 configurations {

@@ -23,7 +23,7 @@ import java.util.Optional;
 public abstract class ScorpioBaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreatedDate

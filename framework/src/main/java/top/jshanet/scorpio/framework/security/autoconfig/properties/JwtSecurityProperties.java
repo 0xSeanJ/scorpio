@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Setter
@@ -22,5 +24,8 @@ public class JwtSecurityProperties {
     private long tokenValidityInSeconds = 1800;
 
     private boolean hideUserNotFoundExceptions = true;
+
+    private Map<String, List<String>> antMatchers;
+
 
 }
