@@ -24,7 +24,7 @@ public class ScorpioResponse extends ScorpioDTO {
     private String bizSeqNo = ScorpioContextUtils.getBizSeqNo();
 
     public ScorpioResponse() {
-
+        setStatus(ScorpioStatus.General.SUCCESS);
     }
 
     public ScorpioResponse(ScorpioStatus status) {

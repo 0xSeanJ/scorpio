@@ -1,4 +1,5 @@
 rootProject.name = 'scorpio'
 include 'scorpio-framework'
 include 'scorpio-gradle-plugin'
+include 'scorpio-security-starter'
 

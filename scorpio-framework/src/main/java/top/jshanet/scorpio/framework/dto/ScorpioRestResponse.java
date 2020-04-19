@@ -21,9 +21,9 @@ public class ScorpioRestResponse<T> extends ScorpioResponse {
 
     private Long totalCount;
 
-    private int currentCount;
+    private Integer currentCount;
 
-    private int totalPageCount = 1;
+    private Integer totalPageCount;
 
     private T result;
 

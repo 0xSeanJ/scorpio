@@ -1,11 +1,14 @@
-package top.jshanet.scorpio.framework.security.autoconfig;
+package top.jshanet.scorpio.security.jwt.autoconfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,22 +20,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import top.jshanet.scorpio.framework.security.autoconfig.properties.JwtSecurityProperties;
-import top.jshanet.scorpio.framework.security.component.JwtAccessDeniedHandler;
-import top.jshanet.scorpio.framework.security.component.JwtAuthenticationEntryPoint;
-import top.jshanet.scorpio.framework.security.component.JwtAuthenticationFilter;
+import top.jshanet.scorpio.security.jwt.component.JwtAuthenticationFilter;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Administrator
+ * @since 2020-04-20
+ */
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 @Configuration
 @ConditionalOnClass({
@@ -42,49 +44,29 @@ import java.util.Map;
 public class JwtSecurityAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new JwtAuthenticationEntryPoint();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new JwtAccessDeniedHandler();
-    }
-
-
     @Configuration
+    @Order(Integer.MIN_VALUE)
     protected static class JwtWebSecurity extends WebSecurityConfigurerAdapter {
 
-        private final JwtAuthenticationFilter jwtAuthFilter;
+        @Autowired
+        private JwtAuthenticationFilter jwtAuthFilter;
 
-        private final PasswordEncoder passwordEncoder;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-        private final UserDetailsService userDetailsService;
+        @Autowired
+        private UserDetailsService userDetailsService;
 
-        private final AuthenticationEntryPoint authenticationEntryPoint;
-
-        private final AccessDeniedHandler accessDeniedHandler;
-
-        private final JwtSecurityProperties properties;
+        @Autowired
+        private JwtSecurityProperties properties;
 
 
-        public JwtWebSecurity(JwtAuthenticationFilter jwtAuthFilter,
-                              PasswordEncoder passwordEncoder,
-                              UserDetailsService userDetailsService,
-                              AuthenticationEntryPoint authenticationEntryPoint,
-                              AccessDeniedHandler accessDeniedHandler, JwtSecurityProperties properties) {
-            this.jwtAuthFilter = jwtAuthFilter;
-            this.passwordEncoder = passwordEncoder;
-            this.userDetailsService = userDetailsService;
-            this.authenticationEntryPoint = authenticationEntryPoint;
-            this.accessDeniedHandler = accessDeniedHandler;
-            this.properties = properties;
-        }
+
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) {
@@ -144,10 +126,10 @@ public class JwtSecurityAutoConfiguration {
                     .antMatchers("/users/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .exceptionHandling()
-                    .authenticationEntryPoint(authenticationEntryPoint)
-                    .accessDeniedHandler(accessDeniedHandler)
-                    .and()
+//                    .exceptionHandling()
+//                    .authenticationEntryPoint(authenticationEntryPoint)
+//                    .accessDeniedHandler(accessDeniedHandler)
+//                    .and()
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
 

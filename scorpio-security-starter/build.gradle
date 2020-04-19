@@ -1,4 +1,4 @@
-archivesBaseName = 'scorpio-framework'
+archivesBaseName = 'jwt-spring-boot-starter'
 
 buildscript {
     ext {
@@ -23,33 +23,23 @@ dependencyManagement {
         mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
     }
 }
-
 jar {
     enabled = true
 }
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     def dependency = rootProject.ext.dependency
-    implementation dependency.mapstruct, dependency.guava, dependency.apache_commons, dependency.lmax_disruptor
-
+    implementation dependency.jjwt
     compileOnly dependency.lombok
     annotationProcessor dependency.lombok
-
 }
 
-configurations {
-    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    compile.exclude group: 'log4j', module: 'log4j'
+publishing {
+    publications {
+        scorpio(MavenPublication) {
+            artifactId = "jwt-spring-boot-starter"
+        }
+    }
 }
-
-
-

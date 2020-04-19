@@ -1,23 +1,26 @@
-package top.jshanet.scorpio.framework.security.component;
-
+package top.jshanet.scorpio.security.jwt.component;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import top.jshanet.scorpio.framework.security.autoconfig.properties.JwtSecurityProperties;
-import top.jshanet.scorpio.framework.security.domain.JwtAuthenticationToken;
-import top.jshanet.scorpio.framework.security.domain.UserCredentials;
+import top.jshanet.scorpio.security.jwt.autoconfig.JwtSecurityProperties;
+import top.jshanet.scorpio.security.jwt.domain.JwtObject;
+import top.jshanet.scorpio.security.jwt.domain.UserCredential;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * @author Administrator
+ * @since 2020-04-20
+ */
 @Component
 public class JwtTokenHelper {
 
-    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
+    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
     private final JwtSecurityProperties jwtSecurityProperties;
 
@@ -26,7 +29,7 @@ public class JwtTokenHelper {
         this.jwtSecurityProperties = jwtSecurityProperties;
     }
 
-    public JwtAuthenticationToken generateToken(UserDetails userDetails) {
+    public JwtObject generateToken(UserDetails userDetails) {
         Date expirationDate = generateExpirationDate();
         String token = Jwts.builder()
                 .setIssuer(jwtSecurityProperties.getIssuer())
@@ -41,7 +44,7 @@ public class JwtTokenHelper {
                 .signWith(SIGNATURE_ALGORITHM, jwtSecurityProperties.getSecret())
                 .compact();
 
-        return new JwtAuthenticationToken(token, expirationDate);
+        return new JwtObject(token, expirationDate);
     }
 
     public String getAuthToken(HttpServletRequest request) {
@@ -53,9 +56,9 @@ public class JwtTokenHelper {
         return null;
     }
 
-    public UserCredentials getUserCredentialsFromToken(String token) throws JwtException {
+    public UserCredential getUserCredentialsFromToken(String token) throws JwtException {
         Claims claims = parseAuthToken(token);
-        UserCredentials userCredentials = new UserCredentials();
+        UserCredential userCredentials = new UserCredential();
         userCredentials.setUsername(claims.getSubject());
         userCredentials.setPassword("");
         return userCredentials;

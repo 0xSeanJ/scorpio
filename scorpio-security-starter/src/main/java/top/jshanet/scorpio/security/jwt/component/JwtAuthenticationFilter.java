@@ -1,6 +1,5 @@
-package top.jshanet.scorpio.framework.security.component;
+package top.jshanet.scorpio.security.jwt.component;
 
-import groovy.util.logging.Log4j2;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,8 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import top.jshanet.scorpio.framework.exception.ScorpioAuthenticationException;
-import top.jshanet.scorpio.framework.security.domain.UserCredentials;
+import top.jshanet.scorpio.security.jwt.domain.UserCredential;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,7 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Log4j2
+/**
+ * @author Administrator
+ * @since 2020-04-20
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -37,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ScorpioAuthenticationException, ServletException, IOException {
+            throws ServletException, IOException {
         String token = jwtTokenHelper.getAuthToken(request);
         if (!StringUtils.isEmpty(token)) {
             try {
@@ -49,9 +50,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void restoreAuthentication(HttpServletRequest request, String token) throws ScorpioAuthenticationException {
+    private void restoreAuthentication(HttpServletRequest request, String token) {
         try {
-            UserCredentials credentials = jwtTokenHelper.getUserCredentialsFromToken(token);
+            UserCredential credentials = jwtTokenHelper.getUserCredentialsFromToken(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
             if (jwtTokenHelper.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication =
@@ -60,10 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (UsernameNotFoundException e) {
-            throw new ScorpioAuthenticationException("username not found.", e);
-        } catch (JwtException e) {
-            throw new ScorpioAuthenticationException("JWT is not be trusted.", e);
+        } catch (Exception ignored) {
+
         }
     }
 }

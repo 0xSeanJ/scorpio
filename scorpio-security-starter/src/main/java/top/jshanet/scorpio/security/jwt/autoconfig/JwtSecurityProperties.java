@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.framework.security.autoconfig.properties;
+package top.jshanet.scorpio.security.jwt.autoconfig;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @author Administrator
+ * @since 2020-04-20
+ */
 @Setter
 @Getter
 @ConfigurationProperties(prefix="scorpio.security.jwt")

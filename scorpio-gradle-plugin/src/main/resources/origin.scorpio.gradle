@@ -50,7 +50,10 @@ clean.doFirst {
 }
 
 
-def scorpio = "top.jshanet.scorpio:scorpio-framework:+"
+def scorpio = [
+        "top.jshanet.scorpio:scorpio-framework:+",
+        "top.jshanet.scorpio:jwt-spring-boot-starter:+"
+]
 
 def orika ='ma.glasnost.orika:orika-core:1.5.4'
 

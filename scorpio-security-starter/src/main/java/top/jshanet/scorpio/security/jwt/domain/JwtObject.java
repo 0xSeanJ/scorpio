@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.framework.security.domain;
+package top.jshanet.scorpio.security.jwt.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,10 +6,14 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * @author Administrator
+ * @since 2020-04-20
+ */
 @Setter
 @Getter
 @AllArgsConstructor
-public class JwtAuthenticationToken {
+public class JwtObject {
     private String token;
     private Date expiresOn;
 }

@@ -216,19 +216,19 @@ public abstract class ScorpioController {
         return execute(null, executor);
     }
 
-    protected <T> ScorpioRestResponse<T> toRestMessage(T t) {
+    protected <T> ScorpioRestResponse<T> toRestResponse(T t) {
         return ScorpioRestResponse.from(t);
     }
 
-    protected <T> ScorpioRestResponse<T> toRestMessage(Page<T> tPage) {
+    protected <T> ScorpioRestResponse<T> toRestResponse(Page<T> tPage) {
         return ScorpioRestResponse.from(tPage);
     }
 
-    protected <T> ScorpioRestResponse<T> toRestMessage(List<T> tList) {
+    protected <T> ScorpioRestResponse<T> toRestResponse(List<T> tList) {
         return ScorpioRestResponse.from(tList);
     }
 
-    protected <T> ScorpioRestResponse<T> toRestMessage(Set<T> tSet) {
+    protected <T> ScorpioRestResponse<T> toRestResponse(Set<T> tSet) {
         return ScorpioRestResponse.from(tSet);
     }
 

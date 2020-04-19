@@ -22,7 +22,7 @@ public class StatusRepository {
             StatusPrefix statusPrefix = object.getClass().getAnnotation(StatusPrefix.class);
             Status status = object.getClass().getField(codeEnum.name()).getAnnotation(Status.class);
             StatusObject statusObject = new StatusObject();
-            int cod = status != null ? status.value() : codeEnum.ordinal();
+            int cod = status != null ? status.code() : codeEnum.ordinal();
             statusObject.setCode(statusPrefix != null ? String.format("%s%0"+LEFT_PAD+"d", statusPrefix.value(), cod)
                     : String.valueOf(cod));
             statusObject.setMsg(status != null && status.msg().length() > 0 ? status.msg() : codeEnum.name());
