@@ -1,4 +1,4 @@
 rootProject.name = 'scorpio'
-include 'framework'
-include 'gradle-plugin'
+include 'scorpio-framework'
+include 'scorpio-gradle-plugin'
 
