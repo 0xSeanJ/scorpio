@@ -134,25 +134,28 @@ public abstract class ScorpioController {
             ScorpioContextUtils.setAuthentication(SecurityContextHolder.getContext().getAuthentication());
 
             try {
-                T message = serviceExecutor.execute(request);
-                deferredResult.setResult(message);
+                T response = serviceExecutor.execute(request);
+                deferredResult.setResult(response);
                 if (enableLog) {
-                    log.info("{} - request {} SUCCESS, request: {}, response: {}",
-                            ScorpioContextUtils.getBizSeqNo(), requestUri, request, message);
+                    log.info("{} - SUCCESS, cost: {}ms, uri: {}, request: {}, response: {}",
+                            ScorpioContextUtils.getBizSeqNo(),System.currentTimeMillis() - start,
+                            requestUri, request, response);
                 }
             } catch (ScorpioException e) {
-                T message = (T) new ScorpioResponse();
-                message.setStatus(e.getStatus());
-                deferredResult.setResult(message);
-                log.info("{} - request {} FAILED, request: {}, response: {}",
-                        ScorpioContextUtils.getBizSeqNo(), requestUri, request, message, e);
+                T response = (T) new ScorpioResponse();
+                response.setStatus(e.getStatus());
+                deferredResult.setResult(response);
+                log.warn("{} - FAIL, cost: {}ms, uri: {}, request: {}, response: {}",
+                        ScorpioContextUtils.getBizSeqNo(), System.currentTimeMillis() - start,
+                        requestUri, request, response, e);
 
             } catch (Exception e) {
                 T errorMessage = (T) new ScorpioResponse(ScorpioStatus.General.UNKNOWN_ERROR);
                 errorMessage.setDebugMsg(e.getMessage());
                 deferredResult.setResult(errorMessage);
-                log.info("{} - request {} FAILED, request: {}",
-                        ScorpioContextUtils.getBizSeqNo(), requestUri, request, e);
+                log.error("{} - ERROR, cost: {}, uri: {}, request: {}",
+                        ScorpioContextUtils.getBizSeqNo(), System.currentTimeMillis() - start,
+                        requestUri, request, e);
             } finally {
                 ScorpioContextUtils.unsetContext();
             }
