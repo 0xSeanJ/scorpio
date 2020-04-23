@@ -4,8 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import top.jshanet.scorpio.security.jwt.autoconfig.JwtSecurityProperties;
+import top.jshanet.scorpio.security.autoconfig.ScorpioSecurityProperties;
 import top.jshanet.scorpio.security.jwt.domain.JwtObject;
 import top.jshanet.scorpio.security.jwt.domain.UserCredential;
 
@@ -14,25 +13,22 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
- * @author Administrator
+ * @author jshanet
  * @since 2020-04-20
  */
-@Component
 public class JwtTokenHelper {
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
-    private final JwtSecurityProperties jwtSecurityProperties;
-
     @Autowired
-    public JwtTokenHelper(JwtSecurityProperties jwtSecurityProperties) {
-        this.jwtSecurityProperties = jwtSecurityProperties;
-    }
+    private ScorpioSecurityProperties securityProperties;
+
+
 
     public JwtObject generateToken(UserDetails userDetails) {
         Date expirationDate = generateExpirationDate();
         String token = Jwts.builder()
-                .setIssuer(jwtSecurityProperties.getIssuer())
+                .setIssuer(securityProperties.getJwt().getIssuer())
                 .setSubject(userDetails.getUsername())
                 .setAudience("WEB")
                 .setIssuedAt(new Date())
@@ -41,7 +37,7 @@ public class JwtTokenHelper {
                         userDetails.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
-                .signWith(SIGNATURE_ALGORITHM, jwtSecurityProperties.getSecret())
+                .signWith(SIGNATURE_ALGORITHM, securityProperties.getJwt().getSecret())
                 .compact();
 
         return new JwtObject(token, expirationDate);
@@ -49,7 +45,7 @@ public class JwtTokenHelper {
 
     public String getAuthToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
-        String tokenSchema = jwtSecurityProperties.getTokenSchema();
+        String tokenSchema = securityProperties.getJwt().getTokenSchema();
         if (authHeader != null && authHeader.startsWith(tokenSchema)) {
             return authHeader.substring(tokenSchema.length());
         }
@@ -71,17 +67,17 @@ public class JwtTokenHelper {
 
     private Claims parseAuthToken(String token) throws JwtException {
         return Jwts.parser()
-                .setSigningKey(jwtSecurityProperties.getSecret())
+                .setSigningKey(securityProperties.getJwt().getSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
 
     private Date generateExpirationDate() {
-        return new Date(new Date().getTime() + jwtSecurityProperties.getTokenValidityInSeconds() * 1000);
+        return new Date(new Date().getTime() + securityProperties.getJwt().getTokenValidityInSeconds() * 1000);
     }
 
     private String getAuthHeaderFromHeader(HttpServletRequest request) {
-        return request.getHeader(jwtSecurityProperties.getTokenHeader());
+        return request.getHeader(securityProperties.getJwt().getTokenHeader());
     }
 
 }

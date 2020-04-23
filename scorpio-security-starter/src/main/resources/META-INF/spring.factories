@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.jshanet.scorpio.security.jwt.autoconfig.JwtSecurityAutoConfiguration
+  top.jshanet.scorpio.security.autoconfig.ScorpioSecurityAutoConfiguration

@@ -17,11 +17,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TimeZone;
 
-/**
- * 简单封装Jackson，实现JSON String&lt;-&gt;Java Object的Mapper。 封装不同的输出风格, 使用不同的builder函数创建实例。
- *
- * @author jonyang
- */
 @SuppressWarnings("rawtypes")
 public class JsonMapper {
 

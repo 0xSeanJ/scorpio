@@ -27,11 +27,12 @@ jar {
     enabled = true
 }
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    //implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     def dependency = rootProject.ext.dependency
-    implementation dependency.jjwt
+    compile dependency.jjwt, dependency.spring_security
     compileOnly dependency.lombok
     annotationProcessor dependency.lombok
 }

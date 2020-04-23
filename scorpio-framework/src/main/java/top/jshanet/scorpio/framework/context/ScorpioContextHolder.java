@@ -2,7 +2,7 @@ package top.jshanet.scorpio.framework.context;
 
 
 /**
- * @author Administrator
+ * @author jshanet
  * @since 2020-04-20
  */
 public class ScorpioContextHolder {

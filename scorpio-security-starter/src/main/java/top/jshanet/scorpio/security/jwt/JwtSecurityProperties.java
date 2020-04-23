@@ -1,15 +1,16 @@
-package top.jshanet.scorpio.security.jwt.autoconfig;
+package top.jshanet.scorpio.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * @author Administrator
+ * @author jshanet
  * @since 2020-04-20
  */
 @Setter
@@ -29,7 +30,7 @@ public class JwtSecurityProperties {
 
     private boolean hideUserNotFoundExceptions = true;
 
-    private Map<String, List<String>> antMatchers;
+    private Map<String, List<String>> antMatchers = new HashMap<>();
 
 
 }

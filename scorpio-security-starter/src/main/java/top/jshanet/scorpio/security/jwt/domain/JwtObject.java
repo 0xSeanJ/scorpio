@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.Date;
 
 /**
- * @author Administrator
+ * @author jshanet
  * @since 2020-04-20
  */
 @Setter

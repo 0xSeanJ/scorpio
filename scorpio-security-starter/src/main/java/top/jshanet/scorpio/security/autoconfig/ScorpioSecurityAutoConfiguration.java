@@ -1,20 +1,22 @@
-package top.jshanet.scorpio.security.jwt.autoconfig;
+package top.jshanet.scorpio.security.autoconfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,13 +28,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import top.jshanet.scorpio.security.jwt.component.JwtAuthenticationFilter;
+import top.jshanet.scorpio.security.jwt.component.JwtTokenHelper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author Administrator
+ * @author jshanet
  * @since 2020-04-20
  */
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
@@ -40,8 +43,8 @@ import java.util.Map;
 @ConditionalOnClass({
         WebSecurityConfigurerAdapter.class,
         AuthenticationManager.class})
-@EnableConfigurationProperties({JwtSecurityProperties.class})
-public class JwtSecurityAutoConfiguration {
+@EnableConfigurationProperties({ScorpioSecurityProperties.class})
+public class ScorpioSecurityAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(PasswordEncoder.class)
@@ -49,8 +52,11 @@ public class JwtSecurityAutoConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    @ConditionalOnProperty(prefix = "scorpio.security.jwt", name = "enable",
+            havingValue = "true")
     @Configuration
-    @Order(Integer.MIN_VALUE)
+    @EnableWebSecurity
+    @Import({JwtAuthenticationFilter.class, JwtTokenHelper.class})
     protected static class JwtWebSecurity extends WebSecurityConfigurerAdapter {
 
         @Autowired
@@ -63,7 +69,7 @@ public class JwtSecurityAutoConfiguration {
         private UserDetailsService userDetailsService;
 
         @Autowired
-        private JwtSecurityProperties properties;
+        private ScorpioSecurityProperties properties;
 
 
 
@@ -76,7 +82,7 @@ public class JwtSecurityAutoConfiguration {
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
             DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-            provider.setHideUserNotFoundExceptions(properties.isHideUserNotFoundExceptions());
+            provider.setHideUserNotFoundExceptions(properties.getJwt().isHideUserNotFoundExceptions());
             provider.setUserDetailsService(userDetailsService);
             provider.setPasswordEncoder(passwordEncoder);
             return provider;
@@ -103,7 +109,7 @@ public class JwtSecurityAutoConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            for (Map.Entry<String, List<String>> entry: properties.getAntMatchers().entrySet()){
+            for (Map.Entry<String, List<String>> entry: properties.getJwt().getAntMatchers().entrySet()){
                 String method = entry.getKey().toUpperCase();
                 if (method.equals("ANY")) {
                     http.authorizeRequests().antMatchers(
