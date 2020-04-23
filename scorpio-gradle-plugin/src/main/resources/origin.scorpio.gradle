@@ -52,7 +52,7 @@ clean.doFirst {
 
 def scorpio = [
         "top.jshanet.scorpio:scorpio-framework:+",
-        "top.jshanet.scorpio:jwt-spring-boot-starter:+"
+        "top.jshanet.scorpio:scorpio-spring-boot-starter-security:+"
 ]
 
 

@@ -27,6 +27,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
 import top.jshanet.scorpio.security.jwt.component.JwtAuthenticationFilter;
 import top.jshanet.scorpio.security.jwt.component.JwtTokenHelper;
 
@@ -51,6 +52,8 @@ public class ScorpioSecurityAutoConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 
     @ConditionalOnProperty(prefix = "scorpio.security.jwt", name = "enable",
             havingValue = "true")
@@ -82,6 +85,7 @@ public class ScorpioSecurityAutoConfiguration {
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
             DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+            System.out.println(properties);
             provider.setHideUserNotFoundExceptions(properties.getJwt().isHideUserNotFoundExceptions());
             provider.setUserDetailsService(userDetailsService);
             provider.setPasswordEncoder(passwordEncoder);
@@ -109,7 +113,7 @@ public class ScorpioSecurityAutoConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            for (Map.Entry<String, List<String>> entry: properties.getJwt().getAntMatchers().entrySet()){
+            for (Map.Entry<String, List<String>> entry: properties.getJwt().getPermitAntMatchers().entrySet()){
                 String method = entry.getKey().toUpperCase();
                 if (method.equals("ANY")) {
                     http.authorizeRequests().antMatchers(

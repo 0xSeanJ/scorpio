@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import top.jshanet.scorpio.security.autoconfig.ScorpioSecurityProperties;
+import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
 import top.jshanet.scorpio.security.jwt.domain.JwtObject;
 import top.jshanet.scorpio.security.jwt.domain.UserCredential;
 

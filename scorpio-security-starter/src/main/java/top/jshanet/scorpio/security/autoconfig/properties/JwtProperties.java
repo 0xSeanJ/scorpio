@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.security.jwt;
+package top.jshanet.scorpio.security.autoconfig.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +15,7 @@ import java.util.UUID;
  */
 @Setter
 @Getter
-@ConfigurationProperties(prefix="scorpio.security.jwt")
-public class JwtSecurityProperties {
+public class JwtProperties {
 
     private String tokenHeader = "Authorization";
 
@@ -26,11 +25,11 @@ public class JwtSecurityProperties {
 
     private String issuer = "app";
 
-    private long tokenValidityInSeconds = 1800;
+    private long tokenValidityInSeconds = 30 * 24 * 60 * 60;
 
     private boolean hideUserNotFoundExceptions = true;
 
-    private Map<String, List<String>> antMatchers = new HashMap<>();
+    private Map<String, List<String>> permitAntMatchers = new HashMap<>();
 
 
 }

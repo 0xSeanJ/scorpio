@@ -27,8 +27,8 @@ jar {
     enabled = true
 }
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    //implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     def dependency = rootProject.ext.dependency
@@ -40,7 +40,7 @@ dependencies {
 publishing {
     publications {
         scorpio(MavenPublication) {
-            artifactId = "jwt-spring-boot-starter"
+            artifactId = "scorpio-spring-boot-starter-security"
         }
     }
 }
