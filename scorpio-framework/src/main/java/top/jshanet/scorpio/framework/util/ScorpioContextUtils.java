@@ -1,8 +1,8 @@
 package top.jshanet.scorpio.framework.util;
 
 import org.springframework.security.core.Authentication;
-import top.jshanet.scorpio.framework.context.ScorpioContext;
-import top.jshanet.scorpio.framework.context.ScorpioContextHolder;
+import top.jshanet.scorpio.framework.core.context.ScorpioContext;
+import top.jshanet.scorpio.framework.core.context.ScorpioContextHolder;
 
 /**
  * @author seanjiang

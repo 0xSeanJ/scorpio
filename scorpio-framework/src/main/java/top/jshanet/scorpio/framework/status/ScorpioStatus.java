@@ -1,15 +1,15 @@
 package top.jshanet.scorpio.framework.status;
 
-import top.jshanet.scorpio.framework.core.status.StatusRepository;
+import top.jshanet.scorpio.framework.core.status.StatusHandler;
 
 public interface ScorpioStatus {
 
     default String getMsg() {
-        return StatusRepository.get(this).getMsg();
+        return StatusHandler.get(this).getMsg();
     }
 
     default String getCode() {
-        return StatusRepository.get(this).getCode();
+        return StatusHandler.get(this).getCode();
     }
 
     enum General implements ScorpioStatus {

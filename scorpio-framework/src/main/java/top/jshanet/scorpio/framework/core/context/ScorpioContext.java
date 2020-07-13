@@ -1,4 +1,4 @@
-package top.jshanet.scorpio.framework.context;
+package top.jshanet.scorpio.framework.core.context;
 
 import lombok.Getter;
 import lombok.Setter;

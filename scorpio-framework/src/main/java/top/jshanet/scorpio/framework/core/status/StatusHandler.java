@@ -1,13 +1,12 @@
 package top.jshanet.scorpio.framework.core.status;
 
-import top.jshanet.scorpio.framework.core.status.StatusObject;
 import top.jshanet.scorpio.framework.status.Status;
 import top.jshanet.scorpio.framework.status.StatusPrefix;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StatusRepository {
+public class StatusHandler {
 
     private static final Map<Object, StatusObject> CODE_MAP = new ConcurrentHashMap<>();
 

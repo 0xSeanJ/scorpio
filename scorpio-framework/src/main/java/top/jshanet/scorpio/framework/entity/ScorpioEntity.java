@@ -1,6 +1,7 @@
 package top.jshanet.scorpio.framework.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -17,7 +20,6 @@ import java.util.Optional;
  * @date 2019/12/25
  */
 @Data
-// AuditingEntityListener 监听器，提供GeneratedValue, CreatedDate, LastModifiedDate 等注解
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class ScorpioEntity {
@@ -27,10 +29,10 @@ public abstract class ScorpioEntity {
     private Long id;
 
     @CreatedDate
-    private Date createTime;
+    private Date createdTime;
 
     @LastModifiedDate
-    private Date updateTime;
+    private Date updatedTime;
 
     @JsonIgnore
     private boolean deleted;
@@ -46,6 +48,41 @@ public abstract class ScorpioEntity {
                 return super.accept(field) && fetchType != FetchType.LAZY;
             }
         }.toString();
+    }
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Map<String, Object> extras;
+
+
+    public void addExtraProperty(String name, Object value) {
+        if (extras == null) {
+            extras = new HashMap<>();
+        }
+        extras.put(name, value);
+    }
+
+    public void addExtraProperties(Map<String ,Object> properties) {
+        if (extras == null) {
+            extras = new HashMap<>();
+        }
+        extras.putAll(properties);
+    }
+
+    public Object getExtraProperty(String name) {
+        if (extras != null) {
+            return extras.get(name);
+        }
+        extras = new HashMap<>();
+        return null;
+    }
+
+    public Object getExtraPropertyOrDefault(String name, Object defaultValue) {
+        if (extras != null) {
+            return extras.getOrDefault(name, defaultValue);
+        }
+        extras = new HashMap<>();
+        return defaultValue;
     }
 
 }
