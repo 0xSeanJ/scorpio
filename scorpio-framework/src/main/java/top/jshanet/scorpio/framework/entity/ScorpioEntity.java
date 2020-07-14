@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +30,10 @@ public abstract class ScorpioEntity {
     private Long id;
 
     @CreatedDate
-    private Date createdTime;
+    private Instant createdTime;
 
     @LastModifiedDate
-    private Date updatedTime;
+    private Instant updatedTime;
 
     @JsonIgnore
     private boolean deleted;

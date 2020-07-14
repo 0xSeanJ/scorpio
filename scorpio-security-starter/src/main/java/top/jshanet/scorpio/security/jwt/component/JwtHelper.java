@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
-import top.jshanet.scorpio.security.jwt.domain.JwtObject;
-import top.jshanet.scorpio.security.jwt.domain.UserCredential;
+import top.jshanet.scorpio.security.jwt.domain.Jwt;
+import top.jshanet.scorpio.security.jwt.domain.ScorpioUserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -16,16 +16,14 @@ import java.util.stream.Collectors;
  * @author jshanet
  * @since 2020-04-20
  */
-public class JwtTokenHelper {
+public class JwtHelper {
 
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
     @Autowired
     private ScorpioSecurityProperties securityProperties;
 
-
-
-    public JwtObject generateToken(UserDetails userDetails) {
+    public Jwt generateToken(UserDetails userDetails) {
         Date expirationDate = generateExpirationDate();
         String token = Jwts.builder()
                 .setIssuer(securityProperties.getJwt().getIssuer())
@@ -40,7 +38,7 @@ public class JwtTokenHelper {
                 .signWith(SIGNATURE_ALGORITHM, securityProperties.getJwt().getSecret())
                 .compact();
 
-        return new JwtObject(token, expirationDate);
+        return new Jwt(token, expirationDate);
     }
 
     public String getAuthToken(HttpServletRequest request) {
@@ -52,16 +50,16 @@ public class JwtTokenHelper {
         return null;
     }
 
-    public UserCredential getUserCredentialsFromToken(String token) throws JwtException {
+    public UserDetails getUserDetailsFromToken(String token) throws JwtException {
         Claims claims = parseAuthToken(token);
-        UserCredential userCredentials = new UserCredential();
-        userCredentials.setUsername(claims.getSubject());
-        userCredentials.setPassword("");
-        return userCredentials;
+        ScorpioUserDetails userDetails = new ScorpioUserDetails();
+        userDetails.setUsername(claims.getSubject());
+        userDetails.setPassword("");
+        return userDetails;
     }
 
     public boolean validateToken(String token, UserDetails userDetails) throws ExpiredJwtException {
-        return getUserCredentialsFromToken(token).getUsername()
+        return getUserDetailsFromToken(token).getUsername()
                 .equals(userDetails.getUsername());
     }
 

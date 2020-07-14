@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import top.jshanet.scorpio.framework.core.service.ScorpioRequestNoService;
 import top.jshanet.scorpio.framework.service.RequestNoService;
 
@@ -15,6 +17,8 @@ import top.jshanet.scorpio.framework.service.RequestNoService;
  */
 @Configuration
 @EnableConfigurationProperties(ScorpioProperties.class)
+@EnableJpaAuditing
+@EnableTransactionManagement
 public class ScorpioAutoConfiguration {
 
     @Autowired

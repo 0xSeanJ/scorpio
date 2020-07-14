@@ -17,6 +17,8 @@ import java.util.UUID;
 @Getter
 public class JwtProperties {
 
+    private boolean enable = false;
+
     private String tokenHeader = "Authorization";
 
     private String tokenSchema = "Bearer ";

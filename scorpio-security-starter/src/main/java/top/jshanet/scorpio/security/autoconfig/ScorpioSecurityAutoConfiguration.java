@@ -5,11 +5,11 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.core.Ordered;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +29,9 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
 import top.jshanet.scorpio.security.jwt.component.JwtAuthenticationFilter;
-import top.jshanet.scorpio.security.jwt.component.JwtTokenHelper;
+import top.jshanet.scorpio.security.jwt.component.JwtAuthenticator;
+import top.jshanet.scorpio.security.jwt.component.JwtHelper;
+import top.jshanet.scorpio.security.jwt.domain.ScorpioUserDetails;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +61,8 @@ public class ScorpioSecurityAutoConfiguration {
             havingValue = "true")
     @Configuration
     @EnableWebSecurity
-    @Import({JwtAuthenticationFilter.class, JwtTokenHelper.class})
+    @Import({JwtAuthenticationFilter.class, JwtHelper.class, JwtAuthenticator.class})
+    @EntityScan(basePackages = "top.jshanet.scorpio.security.domain")
     protected static class JwtWebSecurity extends WebSecurityConfigurerAdapter {
 
         @Autowired
