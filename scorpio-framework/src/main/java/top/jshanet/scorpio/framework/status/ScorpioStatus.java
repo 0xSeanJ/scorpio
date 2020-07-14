@@ -12,13 +12,10 @@ public interface ScorpioStatus {
         return StatusHandler.get(this).getCode();
     }
 
-    enum General implements ScorpioStatus {
-
+    enum DefaultStatus implements ScorpioStatus {
         @Status(code = 0, msg = "success") SUCCESS,
-        @Status(code = -1, msg = "unknown error") UNKNOWN_ERROR,
-        @Status(code = -2, msg = "system timeout") SYSTEM_TIMEOUT,
-        @Status(code = -3, msg = "bad request") BAD_REQUEST
-
+        @Status(code = 1, msg = "unknown error") UNKNOWN_ERROR,
+        @Status(code = 2, msg = "timeout") WEB_TIMEOUT,
     }
 
 }

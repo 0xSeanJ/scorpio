@@ -22,43 +22,23 @@ public class ScorpioContextUtils {
         ScorpioContextHolder.removeContext();
     }
 
-    public static String getBizSeqNo() {
+    public static String getRequestNo() {
         ScorpioContext context = ScorpioContextHolder.getContext();
-        String bizSeqNo = null;
+        String requestNo = null;
         if (context != null) {
-            bizSeqNo = context.getBizSeqNo();
+            requestNo = context.getRequestNo();
         }
-        return bizSeqNo;
+        return requestNo;
     }
 
-    public static void setBizSeqNo(String bizSeqNo) {
+    public static void setRequestNo(String requestNo) {
         ScorpioContext context = ScorpioContextHolder.getContext();
 
         if (context == null) {
             context = new ScorpioContext();
             ScorpioContextHolder.setContext(context);
         }
-        context.setBizSeqNo(bizSeqNo);
-
-    }
-
-    public static String getTenantId() {
-        ScorpioContext context = ScorpioContextHolder.getContext();
-        String tenantId = null;
-        if (context != null) {
-            tenantId = context.getTenantId();
-        }
-        return tenantId;
-    }
-
-    public static void setTenantId(String tenantId) {
-        ScorpioContext context = ScorpioContextHolder.getContext();
-
-        if (context == null) {
-            context = new ScorpioContext();
-            ScorpioContextHolder.setContext(context);
-        }
-        context.setTenantId(tenantId);
+        context.setRequestNo(requestNo);
 
     }
 

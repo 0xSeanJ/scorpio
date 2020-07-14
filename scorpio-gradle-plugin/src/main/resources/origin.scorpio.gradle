@@ -58,30 +58,26 @@ def scorpio = [
 
 dependencies {
     implementation scorpio
+
 }
 
-configurations {
 
-    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    compile.exclude group: 'log4j', module: 'log4j'
-}
 
-bootJar {
-    baseName project.name
-    // 需要外置的配置文件,不放到jar包中,避免冲突。
-    exclude '**/*.properties*'
-    exclude '/*.xml'
-    exclude '/*.ini'
-}
+//bootJar {
+//    baseName project.name
+//    // 需要外置的配置文件,不放到jar包中,避免冲突。
+//    exclude '**/*.properties*'
+//    exclude '/*.xml'
+//    exclude '/*.ini'
+//}
 
-task dist(type: Copy, overwrite: true, dependsOn: ['bootJar']) {
-    destinationDir = new File(projectDir, 'dist')
-    includeEmptyDirs = false
-    into('/app/') { from project.jar.getArchivePath() }
-    into('/scripts/') { from 'src/main/scripts' fileMode 0755 }
-    into('/lib/') {
-        from project.configurations.runtime
-    }
-}
+//task dist(type: Copy, overwrite: true, dependsOn: ['bootJar']) {
+//    destinationDir = new File(projectDir, 'dist')
+//    includeEmptyDirs = false
+//    into('/app/') { from project.jar.getArchivePath() }
+//    into('/scripts/') { from 'src/main/scripts' fileMode 0755 }
+//    into('/lib/') {
+//        from project.configurations.runtime
+//    }
+//}
 

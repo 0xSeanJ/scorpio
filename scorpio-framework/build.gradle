@@ -32,8 +32,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-devtools'
-    compile 'org.springframework.boot:spring-boot-starter-log4j2'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     def dependency = rootProject.ext.dependency
@@ -43,12 +43,6 @@ dependencies {
     compileOnly dependency.lombok
     annotationProcessor dependency.lombok
 
-}
-
-configurations {
-    compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    compile.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-    compile.exclude group: 'log4j', module: 'log4j'
 }
 
 

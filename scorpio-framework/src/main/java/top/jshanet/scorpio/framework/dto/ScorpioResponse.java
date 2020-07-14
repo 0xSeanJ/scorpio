@@ -13,7 +13,7 @@ import top.jshanet.scorpio.framework.util.ScorpioContextUtils;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScorpioResponse extends ScorpioDTO {
+public class ScorpioResponse extends ScorpioDto {
 
     private String code;
 
@@ -21,10 +21,10 @@ public class ScorpioResponse extends ScorpioDTO {
 
     private String debugMsg;
 
-    private String bizSeqNo = ScorpioContextUtils.getBizSeqNo();
+    private String requestNo = ScorpioContextUtils.getRequestNo();
 
     public ScorpioResponse() {
-        setStatus(ScorpioStatus.General.SUCCESS);
+        setStatus(ScorpioStatus.DefaultStatus.SUCCESS);
     }
 
     public ScorpioResponse(ScorpioStatus status) {

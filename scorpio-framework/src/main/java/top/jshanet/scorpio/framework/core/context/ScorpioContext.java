@@ -15,19 +15,16 @@ import java.util.Locale;
 @Setter
 public class ScorpioContext implements SecurityContext {
 
-    private String bizSeqNo;
+    private String requestNo;
 
-    private Locale locale = Locale.CHINESE;
 
-    private String tenantId;
-
-    private Authentication authentication;
+    @Override
+    public Authentication getAuthentication() {
+        return null;
+    }
 
     @Override
     public void setAuthentication(Authentication authentication) {
-        this.authentication = authentication;
 
     }
-
-
 }

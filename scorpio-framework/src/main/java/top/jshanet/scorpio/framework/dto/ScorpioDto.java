@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ScorpioDTO {
+public class ScorpioDto {
 
     @Override
     public String toString() {

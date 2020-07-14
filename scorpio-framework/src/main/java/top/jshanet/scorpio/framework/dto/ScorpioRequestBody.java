@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ScorpioRequestBody extends ScorpioDTO {
+public class ScorpioRequestBody extends ScorpioDto {
 
     private int pageNum;
 
