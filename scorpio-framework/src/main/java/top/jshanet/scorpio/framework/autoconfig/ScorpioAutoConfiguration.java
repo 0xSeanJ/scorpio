@@ -8,6 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import top.jshanet.scorpio.framework.core.service.ScorpioRequestNoService;
 import top.jshanet.scorpio.framework.service.RequestNoService;
 
@@ -17,12 +25,37 @@ import top.jshanet.scorpio.framework.service.RequestNoService;
  */
 @Configuration
 @EnableConfigurationProperties(ScorpioProperties.class)
+@EnableSwagger2
 @EnableJpaAuditing
 @EnableTransactionManagement
 public class ScorpioAutoConfiguration {
 
     @Autowired
     private ScorpioProperties scorpioProperties;
+
+
+    @Bean
+    @ConditionalOnMissingBean(Docket.class)
+    public Docket docket() {
+        ScorpioProperties.SwaggerProperties swaggerProperties = scorpioProperties.getSwagger();
+        Docket docket =  new Docket(DocumentationType.SWAGGER_2)
+                .pathMapping("/")
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(swaggerProperties.getApiBasePackage()))
+                .paths(PathSelectors.any())
+                .build();
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title(swaggerProperties.getTitle())
+                .description(swaggerProperties.getDescription())
+                .contact(new Contact(swaggerProperties.getContactName(),
+                        swaggerProperties.getContactHost(),
+                        swaggerProperties.getContactEmail()))
+                .license(swaggerProperties.getLicense())
+                .licenseUrl(swaggerProperties.getLicenseUrl())
+                .build();
+        return docket.apiInfo(apiInfo);
+
+    }
 
     @Bean("webTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {

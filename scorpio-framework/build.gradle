@@ -16,7 +16,6 @@ buildscript {
 apply plugin: 'org.springframework.boot'
 apply plugin: "io.spring.dependency-management"
 
-sourceCompatibility = 1.8
 
 dependencyManagement {
     imports {
@@ -34,14 +33,17 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     def dependency = rootProject.ext.dependency
     compile dependency.mapstruct, dependency.guava, dependency.apache_commons, dependency.lmax_disruptor
-    compile dependency.spring_security_core
+    compile dependency.spring_security_core, dependency.springfox_boot_starter
 
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly dependency.lombok
     annotationProcessor dependency.lombok
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 }
 
