@@ -3,6 +3,7 @@ package top.jshanet.scorpio.framework.autoconfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 
 /**
  * @author seanjiang
@@ -10,8 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "scorpio")
-public class ScorpioProperties {
+@ConfigurationProperties(prefix = "scorpio.webmvc.async")
+public class ScorpioWebMvcAsyncProperties {
 
     @Getter
     @Setter
@@ -34,18 +35,10 @@ public class ScorpioProperties {
 
     }
 
-    @Getter
-    @Setter
-    public static class WebProperties {
+    private ThreadPoolProperties threadPool = new ThreadPoolProperties();
 
-        private ThreadPoolProperties threadPool = new ThreadPoolProperties();
+    private long timeout = 100000L;
 
-        private long timeout = 100000L;
-    }
-
-
-
-    private WebProperties web = new WebProperties();
-
+    private boolean enableGlobalRestMessage = true;
 
 }

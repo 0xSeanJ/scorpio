@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ScorpioRequestBody extends ScorpioDto {
+public class PageableRequestBody extends ScorpioDto {
 
-    private int pageNum;
+    private int pageNo = 1;
 
-    private int pageSize;
+    private int pageSize = 10;
 
 }

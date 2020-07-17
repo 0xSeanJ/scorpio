@@ -16,19 +16,19 @@ import top.jshanet.scorpio.framework.service.RequestNoService;
  * @since 2020-07-14
  */
 @Configuration
-@EnableConfigurationProperties(ScorpioProperties.class)
+@EnableConfigurationProperties(ScorpioWebMvcAsyncProperties.class)
 @EnableJpaAuditing
 @EnableTransactionManagement
 public class ScorpioAutoConfiguration {
 
     @Autowired
-    private ScorpioProperties scorpioProperties;
+    private ScorpioWebMvcAsyncProperties scorpioWebMvcAsyncProperties;
 
 
     @Bean("webTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-        ScorpioProperties.ThreadPoolProperties threadPoolProperties = scorpioProperties.getWeb().getThreadPool();
+        ScorpioWebMvcAsyncProperties.ThreadPoolProperties threadPoolProperties = scorpioWebMvcAsyncProperties.getThreadPool();
         threadPoolTaskExecutor.setCorePoolSize(threadPoolProperties.getCoolPoolSize());
         threadPoolTaskExecutor.setMaxPoolSize(threadPoolProperties.getMaxPoolSize());
         threadPoolTaskExecutor.setQueueCapacity(threadPoolProperties.getQueueCapacity());
