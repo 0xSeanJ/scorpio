@@ -17,16 +17,19 @@ public class DeferredRunnable<R, M> implements Runnable {
     private ServiceExecutor<R> serviceExecutor;
     private String requestNo;
     private boolean enableRestMessage;
+    private DeferredExceptionResolver exceptionResolver;
 
     public DeferredRunnable(String requestNo,
                             DeferredResult<?> deferredResult,
                             ServiceExecutor<R> serviceExecutor,
-                            boolean enableRestMessage) {
+                            boolean enableRestMessage,
+                            DeferredExceptionResolver exceptionResolver) {
         this.mDeferredResult = (DeferredResult<M>) deferredResult;
         this.rDeferredResult = (DeferredResult<R>) deferredResult;
         this.serviceExecutor = serviceExecutor;
         this.requestNo = requestNo;
         this.enableRestMessage = enableRestMessage;
+        this.exceptionResolver = exceptionResolver;
     }
 
 
@@ -34,11 +37,18 @@ public class DeferredRunnable<R, M> implements Runnable {
     @Override
     public void run() {
         ScorpioContextUtils.setRequestNo(requestNo);
-        R result = serviceExecutor.execute();
-        if (enableRestMessage) {
-            mDeferredResult.setResult((M) ScorpioRestMessage.from(result));
-        } else {
-            rDeferredResult.setResult(result);
+        try {
+            R result = serviceExecutor.execute();
+            if (enableRestMessage) {
+                mDeferredResult.setResult((M) ScorpioRestMessage.from(result));
+            } else {
+                rDeferredResult.setResult(result);
+            }
+        } catch (Throwable throwable) {
+            exceptionResolver.resolveException(mDeferredResult, throwable);
+        } finally {
+            ScorpioContextUtils.unsetContext();
         }
+
     }
 }

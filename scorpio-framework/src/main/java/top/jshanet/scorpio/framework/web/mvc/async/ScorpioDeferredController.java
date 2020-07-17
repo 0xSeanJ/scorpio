@@ -1,13 +1,22 @@
 package top.jshanet.scorpio.framework.web.mvc.async;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import top.jshanet.scorpio.framework.autoconfig.ScorpioWebMvcAsyncProperties;
+import top.jshanet.scorpio.framework.core.deferred.DeferredExceptionResolver;
 import top.jshanet.scorpio.framework.core.deferred.DeferredRunnable;
 import top.jshanet.scorpio.framework.core.deferred.ServiceExecutor;
 import top.jshanet.scorpio.framework.dto.ScorpioResponse;
@@ -17,6 +26,7 @@ import top.jshanet.scorpio.framework.status.ScorpioStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * @author seanjiang
@@ -46,6 +56,12 @@ public abstract class ScorpioDeferredController {
     @Autowired
     private RequestMappingHandlerMapping handlerMapping;
 
+    @Autowired
+    private DeferredExceptionResolver exceptionResolver;
+
+    private final Map<ControllerAdviceBean, ExceptionHandlerMethodResolver> exceptionHandlerAdviceCache =
+            new LinkedHashMap<>();
+
 
     protected HandlerMethod getHandlerMethod() throws Exception {
         return (HandlerMethod) handlerMapping.getHandler(httpServletRequest).getHandler();
@@ -68,19 +84,32 @@ public abstract class ScorpioDeferredController {
                 || scorpioWebMvcAsyncProperties.isEnableGlobalRestMessage();
     }
 
-    protected DeferredResult<?> execute(ServiceExecutor<?> serviceExecutor) {
-        ScorpioResponse timeoutResponse = new ScorpioResponse(ScorpioStatus.DefaultStatus.WEB_TIMEOUT);
-        DeferredResult<?> deferredResult = new DeferredResult<>(scorpioWebMvcAsyncProperties.getTimeout(), timeoutResponse);
+
+    protected DeferredResult<?> execute(ServiceExecutor<?> serviceExecutor, Long timeout) {
+        ScorpioResponse timeoutResponse = ScorpioResponse.from(ScorpioStatus.DefaultStatus.WEB_TIMEOUT);
+        DeferredResult<?> deferredResult = new DeferredResult<>(
+                timeout == null ? scorpioWebMvcAsyncProperties.getTimeout() : timeout,
+                timeoutResponse);
         try {
             String requestNo = requestNoService.nextRequestNo();
             DeferredRunnable<?, ?> deferredRunnable = new DeferredRunnable(
                     requestNo, deferredResult, serviceExecutor,
-                    isEnableRestMessage());
-            threadPoolTaskExecutor.submit(deferredRunnable);
-
+                    isEnableRestMessage(), exceptionResolver);
+            // support spring security
+            DelegatingSecurityContextAsyncTaskExecutor securityContextAsyncTaskExecutor =
+                    new DelegatingSecurityContextAsyncTaskExecutor(threadPoolTaskExecutor, SecurityContextHolder.getContext());
+            securityContextAsyncTaskExecutor.submit(deferredRunnable);
         } catch (Exception ignored) {
         }
         return deferredResult;
+    }
+
+    protected DeferredResult<?> execute(ServiceExecutor<?> serviceExecutor) {
+        return execute(serviceExecutor, null);
+    }
+
+    protected <T> DeferredResult<T> executeT(ServiceExecutor<T> serviceExecutor, Long timeout) {
+        return (DeferredResult<T>) execute(serviceExecutor, timeout);
     }
 
     protected <T> DeferredResult<T> executeT(ServiceExecutor<T> serviceExecutor) {

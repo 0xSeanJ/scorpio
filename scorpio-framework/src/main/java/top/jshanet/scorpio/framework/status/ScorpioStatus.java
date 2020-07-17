@@ -13,9 +13,10 @@ public interface ScorpioStatus {
     }
 
     enum DefaultStatus implements ScorpioStatus {
-        @Status(code = 0, msg = "success") SUCCESS,
+        @Status(code = 0, msg = "success") OK,
         @Status(code = 1, msg = "unknown error") UNKNOWN_ERROR,
         @Status(code = 2, msg = "timeout") WEB_TIMEOUT,
+        @Status(code = 4, msg = "bad argument") BAD_ARGUMENT,
     }
 
 }

@@ -5,9 +5,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import top.jshanet.scorpio.framework.core.advice.ScorpioControllerAdvice;
+import top.jshanet.scorpio.framework.core.deferred.DeferredExceptionResolver;
 import top.jshanet.scorpio.framework.core.service.ScorpioRequestNoService;
 import top.jshanet.scorpio.framework.service.RequestNoService;
 
@@ -19,6 +22,7 @@ import top.jshanet.scorpio.framework.service.RequestNoService;
 @EnableConfigurationProperties(ScorpioWebMvcAsyncProperties.class)
 @EnableJpaAuditing
 @EnableTransactionManagement
+@Import({DeferredExceptionResolver.class, ScorpioControllerAdvice.class})
 public class ScorpioAutoConfiguration {
 
     @Autowired
@@ -45,6 +49,7 @@ public class ScorpioAutoConfiguration {
     public RequestNoService requestNoService() {
         return new ScorpioRequestNoService();
     }
+
 
 
 
