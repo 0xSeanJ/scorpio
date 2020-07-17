@@ -62,7 +62,6 @@ public class ScorpioSecurityAutoConfiguration {
     @Configuration
     @EnableWebSecurity
     @Import({JwtAuthenticationFilter.class, JwtHelper.class, JwtAuthenticator.class})
-    @EntityScan(basePackages = "top.jshanet.scorpio.security.domain")
     protected static class JwtWebSecurity extends WebSecurityConfigurerAdapter {
 
         @Autowired

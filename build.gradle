@@ -9,6 +9,7 @@ allprojects {
 
 
     repositories {
+
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
@@ -60,7 +61,7 @@ def lmax_disruptor_version = "3.4.2"
 def guava_version = '28.1-jre'
 def jjwt_version = "0.9.1"
 def spring_security_version = "5.1.6.RELEASE"
-def springfox_boot_starter = '3.0.0'
+def springfox_version = '3.0.0'
 ext {
     dependency = [
             // define dependencies
@@ -78,8 +79,10 @@ ext {
             guava          : [
                     "com.google.guava:guava:${guava_version}"
             ],
-            springfox_boot_starter        : [
-                    "io.springfox:springfox-boot-starter:${springfox_boot_starter}"
+            springfox        : [
+//                    "io.springfox:springfox-swagger2:${springfox_version}",
+//                    "io.springfox:springfox-swagger-ui:${springfox_version}",
+                    "io.springfox:springfox-boot-starter:${springfox_version}"
             ],
             apache_commons : [
                     "org.apache.commons:commons-text:1.8",

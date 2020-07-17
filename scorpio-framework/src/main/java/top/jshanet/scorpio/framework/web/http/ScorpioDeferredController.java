@@ -17,7 +17,7 @@ import top.jshanet.scorpio.framework.status.ScorpioStatus;
  * @since 2020-07-13
  */
 @Slf4j
-@SuppressWarnings("all")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class ScorpioDeferredController {
 
 

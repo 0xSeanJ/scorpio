@@ -43,23 +43,9 @@ public class ScorpioProperties {
         private long timeout = 100000L;
     }
 
-    @Getter
-    @Setter
-    public static class  SwaggerProperties {
-        private String apiBasePackage;
-        private String title;
-        private String description;
-        private String version;
-        private String contactName;
-        private String contactHost;
-        private String contactEmail;
-        private String license;
-        private String licenseUrl;
-    }
 
 
     private WebProperties web = new WebProperties();
 
-    private SwaggerProperties swagger = new SwaggerProperties();
 
 }

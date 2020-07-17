@@ -2,7 +2,7 @@ archivesBaseName = 'scorpio-framework'
 
 buildscript {
     ext {
-        springBootVersion = '2.1.9.RELEASE'
+        springBootVersion = '2.3.1.RELEASE'
     }
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public'}
@@ -27,6 +27,8 @@ jar {
     enabled = true
 }
 
+
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework.boot:spring-boot-starter-web'
@@ -38,7 +40,8 @@ dependencies {
 
     def dependency = rootProject.ext.dependency
     compile dependency.mapstruct, dependency.guava, dependency.apache_commons, dependency.lmax_disruptor
-    compile dependency.spring_security_core, dependency.springfox_boot_starter
+    compile dependency.spring_security_core
+    compile dependency.springfox
 
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly dependency.lombok
