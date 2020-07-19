@@ -46,9 +46,9 @@ public class DeferredRunnable<R, M> implements Runnable {
             }
         } catch (Throwable throwable) {
             exceptionResolver.resolveException(mDeferredResult, throwable);
-        } finally {
-            ScorpioContextUtils.unsetContext();
         }
+        ScorpioContextUtils.unsetContext();
+
 
     }
 }

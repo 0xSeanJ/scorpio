@@ -62,6 +62,16 @@ dependencies {
 }
 
 
+compileJava {
+    options.compilerArgs = [
+            // mapstruct global configuration options
+            // see https://mapstruct.org/documentation/dev/reference/html/#configuration-options
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.unmappedTargetPolicy=IGNORE'
+    ]
+}
+
+
 
 //bootJar {
 //    baseName project.name
