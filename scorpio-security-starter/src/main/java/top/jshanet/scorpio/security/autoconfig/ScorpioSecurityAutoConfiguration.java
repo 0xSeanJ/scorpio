@@ -147,7 +147,6 @@ public class ScorpioSecurityAutoConfiguration {
                     .and()
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/users/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .exceptionHandling()
