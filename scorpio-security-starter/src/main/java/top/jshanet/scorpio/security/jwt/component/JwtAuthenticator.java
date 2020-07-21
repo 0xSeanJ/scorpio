@@ -44,4 +44,8 @@ public class JwtAuthenticator {
         return this.jwtHelper.generateToken(userDetails);
     }
 
+    public Jwt authenticate(UserDetails userDetails) {
+        return this.jwtHelper.generateToken(userDetails);
+    }
+
 }

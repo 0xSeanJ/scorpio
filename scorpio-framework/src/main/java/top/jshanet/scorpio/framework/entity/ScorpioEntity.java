@@ -86,4 +86,5 @@ public abstract class ScorpioEntity {
         return defaultValue;
     }
 
+
 }

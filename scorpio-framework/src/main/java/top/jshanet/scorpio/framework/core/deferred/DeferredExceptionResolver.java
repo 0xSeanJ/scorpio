@@ -8,7 +8,6 @@ import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import top.jshanet.scorpio.framework.dto.ScorpioResponse;
 import top.jshanet.scorpio.framework.status.ScorpioStatus;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -75,7 +74,7 @@ public class DeferredExceptionResolver implements InitializingBean {
             }
         } catch (Exception e) {
             deferredResult.setResult(
-                    ScorpioResponse.from(ScorpioStatus.DefaultStatus.UNKNOWN_ERROR,
+                    ScorpioResponse.fromStatus(ScorpioStatus.DefaultStatus.UNKNOWN_ERROR,
                             e.getLocalizedMessage()));
         }
     }

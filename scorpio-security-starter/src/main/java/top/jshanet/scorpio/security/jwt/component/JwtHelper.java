@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
+import top.jshanet.scorpio.security.autoconfig.properties.JwtProperties;
 import top.jshanet.scorpio.security.jwt.domain.Jwt;
 import top.jshanet.scorpio.security.jwt.domain.ScorpioUserDetails;
 
@@ -21,21 +21,21 @@ public class JwtHelper {
     private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
     @Autowired
-    private ScorpioSecurityProperties securityProperties;
+    private JwtProperties jwtProperties;
 
     public Jwt generateToken(UserDetails userDetails) {
         Date expirationDate = generateExpirationDate();
         String token = Jwts.builder()
-                .setIssuer(securityProperties.getJwt().getIssuer())
+                .setIssuer(jwtProperties.getIssuer())
                 .setSubject(userDetails.getUsername())
                 .setAudience("WEB")
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .claim("roles",
-                        userDetails.getAuthorities().stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .signWith(SIGNATURE_ALGORITHM, securityProperties.getJwt().getSecret())
+//                .claim("roles",
+//                        userDetails.getAuthorities().stream()
+//                                .map(GrantedAuthority::getAuthority)
+//                                .collect(Collectors.toList()))
+                .signWith(SIGNATURE_ALGORITHM, jwtProperties.getSecret())
                 .compact();
 
         return new Jwt(token, expirationDate);
@@ -43,7 +43,7 @@ public class JwtHelper {
 
     public String getAuthToken(HttpServletRequest request) {
         String authHeader = getAuthHeaderFromHeader(request);
-        String tokenSchema = securityProperties.getJwt().getTokenSchema();
+        String tokenSchema = jwtProperties.getTokenSchema();
         if (authHeader != null && authHeader.startsWith(tokenSchema)) {
             return authHeader.substring(tokenSchema.length());
         }
@@ -65,17 +65,17 @@ public class JwtHelper {
 
     private Claims parseAuthToken(String token) throws JwtException {
         return Jwts.parser()
-                .setSigningKey(securityProperties.getJwt().getSecret())
+                .setSigningKey(jwtProperties.getSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
 
     private Date generateExpirationDate() {
-        return new Date(new Date().getTime() + securityProperties.getJwt().getTokenValidityInSeconds() * 1000);
+        return new Date(new Date().getTime() + jwtProperties.getTokenValidityInSeconds() * 1000);
     }
 
     private String getAuthHeaderFromHeader(HttpServletRequest request) {
-        return request.getHeader(securityProperties.getJwt().getTokenHeader());
+        return request.getHeader(jwtProperties.getTokenHeader());
     }
 
 }

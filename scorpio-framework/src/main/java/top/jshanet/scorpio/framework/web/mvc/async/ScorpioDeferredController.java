@@ -1,10 +1,8 @@
 package top.jshanet.scorpio.framework.web.mvc.async;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
@@ -12,8 +10,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import top.jshanet.scorpio.framework.autoconfig.ScorpioWebMvcAsyncProperties;
 import top.jshanet.scorpio.framework.core.deferred.DeferredExceptionResolver;
@@ -86,7 +82,7 @@ public abstract class ScorpioDeferredController {
 
 
     protected DeferredResult<?> execute(ServiceExecutor<?> serviceExecutor, Long timeout) {
-        ScorpioResponse timeoutResponse = ScorpioResponse.from(ScorpioStatus.DefaultStatus.WEB_TIMEOUT);
+        ScorpioResponse timeoutResponse = ScorpioResponse.fromStatus(ScorpioStatus.DefaultStatus.WEB_TIMEOUT);
         DeferredResult<?> deferredResult = new DeferredResult<>(
                 timeout == null ? scorpioWebMvcAsyncProperties.getTimeout() : timeout,
                 timeoutResponse);

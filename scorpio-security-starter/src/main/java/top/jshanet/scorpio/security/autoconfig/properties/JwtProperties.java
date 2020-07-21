@@ -15,6 +15,7 @@ import java.util.UUID;
  */
 @Setter
 @Getter
+@ConfigurationProperties(prefix = "scorpio.security.jwt")
 public class JwtProperties {
 
     private boolean enable = false;

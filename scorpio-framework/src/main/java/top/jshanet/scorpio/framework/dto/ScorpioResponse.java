@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import top.jshanet.scorpio.framework.exception.ScorpioException;
 import top.jshanet.scorpio.framework.status.ScorpioStatus;
+import top.jshanet.scorpio.framework.util.JsonMapper;
 import top.jshanet.scorpio.framework.util.ScorpioContextUtils;
 
 /**
@@ -15,6 +16,8 @@ import top.jshanet.scorpio.framework.util.ScorpioContextUtils;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ScorpioResponse extends ScorpioDto {
+
+    private static final JsonMapper JSON_MAPPER = JsonMapper.nonDefaultMapper();
 
     private String code;
 
@@ -28,21 +31,21 @@ public class ScorpioResponse extends ScorpioDto {
         setStatus(ScorpioStatus.DefaultStatus.OK);
     }
 
-    public static ScorpioResponse from(ScorpioException e) {
+    public static ScorpioResponse fromException(ScorpioException e) {
         ScorpioResponse scorpioResponse = new ScorpioResponse();
         scorpioResponse.setStatus(e.getStatus());
         scorpioResponse.setDebugMsg(e.getDebugMsg());
         return scorpioResponse;
     }
 
-    public static ScorpioResponse from(ScorpioStatus status) {
+    public static ScorpioResponse fromStatus(ScorpioStatus status) {
         ScorpioResponse scorpioResponse = new ScorpioResponse();
         scorpioResponse.setStatus(status);
         return scorpioResponse;
     }
 
-    public static ScorpioResponse from(ScorpioStatus status, String debugMsg) {
-        ScorpioResponse response = from(status);
+    public static ScorpioResponse fromStatus(ScorpioStatus status, String debugMsg) {
+        ScorpioResponse response = fromStatus(status);
         response.setDebugMsg(debugMsg);
         return response;
     }
@@ -53,4 +56,8 @@ public class ScorpioResponse extends ScorpioDto {
     }
 
 
+    @Override
+    public String toString() {
+        return JSON_MAPPER.toJson(this);
+    }
 }

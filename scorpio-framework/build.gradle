@@ -41,7 +41,7 @@ dependencies {
     def dependency = rootProject.ext.dependency
     compile dependency.mapstruct, dependency.guava, dependency.apache_commons, dependency.lmax_disruptor
     compile dependency.spring_security_core
-    compile dependency.springfox
+//    compile dependency.springfox
 
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly dependency.lombok

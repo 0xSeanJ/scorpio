@@ -27,6 +27,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import top.jshanet.scorpio.security.advice.ScorpioAccessDeniedHandler;
+import top.jshanet.scorpio.security.advice.ScorpioAuthenticationEntryPoint;
+import top.jshanet.scorpio.security.advice.SecurityControllerAdvice;
+import top.jshanet.scorpio.security.autoconfig.properties.JwtProperties;
 import top.jshanet.scorpio.security.autoconfig.properties.ScorpioSecurityProperties;
 import top.jshanet.scorpio.security.jwt.component.JwtAuthenticationFilter;
 import top.jshanet.scorpio.security.jwt.component.JwtAuthenticator;
@@ -46,7 +50,8 @@ import java.util.Map;
 @ConditionalOnClass({
         WebSecurityConfigurerAdapter.class,
         AuthenticationManager.class})
-@EnableConfigurationProperties({ScorpioSecurityProperties.class})
+@EnableConfigurationProperties({ScorpioSecurityProperties.class, JwtProperties.class})
+@Import({SecurityControllerAdvice.class, ScorpioAccessDeniedHandler.class, ScorpioAuthenticationEntryPoint.class})
 public class ScorpioSecurityAutoConfiguration {
 
     @Bean
@@ -76,7 +81,14 @@ public class ScorpioSecurityAutoConfiguration {
         @Autowired
         private ScorpioSecurityProperties properties;
 
+        @Autowired
+        private JwtProperties jwtProperties;
 
+        @Autowired
+        private ScorpioAccessDeniedHandler accessDeniedHandler;
+
+        @Autowired
+        private ScorpioAuthenticationEntryPoint authenticationEntryPoint;
 
 
         @Override
@@ -88,7 +100,7 @@ public class ScorpioSecurityAutoConfiguration {
         public DaoAuthenticationProvider authenticationProvider() {
             DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
             System.out.println(properties);
-            provider.setHideUserNotFoundExceptions(properties.getJwt().isHideUserNotFoundExceptions());
+            provider.setHideUserNotFoundExceptions(jwtProperties.isHideUserNotFoundExceptions());
             provider.setUserDetailsService(userDetailsService);
             provider.setPasswordEncoder(passwordEncoder);
             return provider;
@@ -115,7 +127,7 @@ public class ScorpioSecurityAutoConfiguration {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            for (Map.Entry<String, List<String>> entry: properties.getJwt().getPermitAntMatchers().entrySet()){
+            for (Map.Entry<String, List<String>> entry: jwtProperties.getPermitAntMatchers().entrySet()){
                 String method = entry.getKey().toUpperCase();
                 if (method.equals("ANY")) {
                     http.authorizeRequests().antMatchers(
@@ -138,10 +150,10 @@ public class ScorpioSecurityAutoConfiguration {
                     .antMatchers("/users/auth").permitAll()
                     .anyRequest().authenticated()
                     .and()
-//                    .exceptionHandling()
-//                    .authenticationEntryPoint(authenticationEntryPoint)
-//                    .accessDeniedHandler(accessDeniedHandler)
-//                    .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(authenticationEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler)
+                    .and()
                     .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
 

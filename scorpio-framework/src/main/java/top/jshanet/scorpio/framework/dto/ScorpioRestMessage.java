@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
+import top.jshanet.scorpio.framework.status.ScorpioStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,12 +38,24 @@ public class ScorpioRestMessage<T> extends ScorpioResponse {
     }
 
     public static <T> ScorpioRestMessage<T> from(T t) {
-        ScorpioRestMessage<T> response = new ScorpioRestMessage<>();
-        response.setData(t);
+        if (t instanceof Page) {
+            return fromPage((Page) t);
+        } else if (t instanceof Collection) {
+            return fromCollection((Collection) t);
+        } else {
+            ScorpioRestMessage<T> response = new ScorpioRestMessage<>();
+            response.setData(t);
+            return response;
+        }
+    }
+
+    public static <T> ScorpioRestMessage<T> fromStatus(ScorpioStatus status, T data) {
+        ScorpioRestMessage response = from(data);
+        response.setStatus(status);
         return response;
     }
 
-    public static <T> ScorpioRestMessage<T> from(Page tPage) {
+    public static <T> ScorpioRestMessage<T> fromPage(Page tPage) {
         ScorpioRestMessage<T> response = new ScorpioRestMessage<>();
         response.setData((T) tPage.getContent());
         response.setTotalCount(tPage.getTotalElements());
@@ -52,17 +65,10 @@ public class ScorpioRestMessage<T> extends ScorpioResponse {
         return response;
     }
 
-    public static <T extends Collection> ScorpioRestMessage<T> from(Set tSet) {
+    public static <T> ScorpioRestMessage<T> fromCollection(Collection collection) {
         ScorpioRestMessage<T> response = new ScorpioRestMessage<>();
-        response.setData((T) tSet);
-        response.setTotalCount((long) tSet.size());
-        return response;
-    }
-
-    public static <T extends Collection> ScorpioRestMessage<T> from(List tList) {
-        ScorpioRestMessage<T> response = new ScorpioRestMessage<>();
-        response.setData((T) tList);
-        response.setTotalCount((long) tList.size());
+        response.setData((T) collection);
+        response.setTotalCount((long) collection.size());
         return response;
     }
 

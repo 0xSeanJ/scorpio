@@ -3,7 +3,6 @@ package top.jshanet.scorpio.framework.autoconfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 
 /**
  * @author seanjiang

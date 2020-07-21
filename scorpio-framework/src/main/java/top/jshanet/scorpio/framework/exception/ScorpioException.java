@@ -13,6 +13,8 @@ public class ScorpioException extends RuntimeException {
 
     private String debugMsg;
 
+    private Object data;
+
     public ScorpioException(ScorpioStatus status, String debugMsg) {
         super(status.getMsg());
         this.status = status;
@@ -24,11 +26,21 @@ public class ScorpioException extends RuntimeException {
         this.status = status;
     }
 
+    public ScorpioException(ScorpioStatus status, Object data) {
+        super(status.getMsg());
+        this.status = status;
+        this.data = data;
+    }
+
     public ScorpioStatus getStatus() {
         return status;
     }
 
     public String getDebugMsg() {
         return debugMsg;
+    }
+
+    public Object getData() {
+        return data;
     }
 }
