@@ -1,6 +1,7 @@
 package top.jshanet.scorpio.framework.core.deferred;
 
 import lombok.SneakyThrows;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.async.DeferredResult;
 import top.jshanet.scorpio.framework.dto.ScorpioRestMessage;
 import top.jshanet.scorpio.framework.util.ScorpioContextUtils;
@@ -37,6 +38,7 @@ public class DeferredRunnable<R, M> implements Runnable {
     @Override
     public void run() {
         ScorpioContextUtils.setRequestNo(requestNo);
+        ScorpioContextUtils.setAuthentication(SecurityContextHolder.getContext().getAuthentication());
         try {
             R result = serviceExecutor.execute();
             if (enableRestMessage) {

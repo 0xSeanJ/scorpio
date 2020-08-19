@@ -23,8 +23,7 @@ public class ScorpioAuthenticationEntryPoint implements AuthenticationEntryPoint
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ScorpioResponse scorpioResponse = new ScorpioResponse();
-        scorpioResponse.setStatus(SecurityStatus.ACCESS_DENIED);
+        ScorpioResponse scorpioResponse = ScorpioResponse.fromStatus(SecurityStatus.UNAUTHORIZED_CLIENT, authException.getLocalizedMessage());
         String json = JSON_MAPPER.toJson(scorpioResponse);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter printWriter = response.getWriter()) {

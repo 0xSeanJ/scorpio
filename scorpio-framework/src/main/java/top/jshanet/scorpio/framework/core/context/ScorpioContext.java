@@ -17,14 +17,16 @@ public class ScorpioContext implements SecurityContext {
 
     private String requestNo;
 
+    private Authentication authentication;
+
 
     @Override
     public Authentication getAuthentication() {
-        return null;
+        return authentication;
     }
 
     @Override
     public void setAuthentication(Authentication authentication) {
-
+        this.authentication = authentication;
     }
 }

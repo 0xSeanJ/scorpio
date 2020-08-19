@@ -48,6 +48,7 @@ public class ScorpioContextUtils {
             context = new ScorpioContext();
             ScorpioContextHolder.setContext(context);
         }
+        context.setAuthentication(authentication);
     }
 
     public static Authentication getAuthentication() {
@@ -57,6 +58,10 @@ public class ScorpioContextUtils {
             authentication = context.getAuthentication();
         }
         return authentication;
+    }
+
+    public static String getUsername() {
+        return getAuthentication().getPrincipal().toString();
     }
 
 

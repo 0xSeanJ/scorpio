@@ -24,8 +24,7 @@ public class ScorpioAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ScorpioResponse scorpioResponse = new ScorpioResponse();
-        scorpioResponse.setStatus(SecurityStatus.UNAUTHORIZED_CLIENT);
+        ScorpioResponse scorpioResponse = ScorpioResponse.fromStatus(SecurityStatus.ACCESS_DENIED, accessDeniedException.getLocalizedMessage());
         String json = JSON_MAPPER.toJson(scorpioResponse);
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try (PrintWriter printWriter = response.getWriter()) {

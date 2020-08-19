@@ -3,6 +3,7 @@ package top.jshanet.scorpio.framework.core.enumerate;
 import top.jshanet.scorpio.framework.enumerate.Description;
 import top.jshanet.scorpio.framework.enumerate.Properties;
 import top.jshanet.scorpio.framework.enumerate.Property;
+import top.jshanet.scorpio.framework.enumerate.ScorpioEnum;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,5 +35,6 @@ public class EnumHandler {
             throw new Error(e);
         }
     }
+
 
 }
