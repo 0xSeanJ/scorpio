@@ -4,6 +4,7 @@ buildscript {
     }
 
     repositories {
+        mavenLocal()
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
         mavenCentral()
     }
@@ -15,9 +16,9 @@ buildscript {
 
 
 repositories {
+    mavenLocal()
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
     mavenCentral()
-    mavenLocal()
 }
 
 apply plugin: 'eclipse'
@@ -52,14 +53,13 @@ clean.doFirst {
 
 
 def scorpio = [
-        "top.jshanet.scorpio:scorpio-framework:+",
-        "top.jshanet.scorpio:scorpio-spring-boot-starter-security:+"
+        "top.jshanet.scorpio:scorpio-framework:1.0.2-SNAPSHOT",
+        "top.jshanet.scorpio:scorpio-spring-boot-starter-security:1.0.2-SNAPSHOT"
 ]
 
 
 dependencies {
     implementation scorpio
-
 }
 
 

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.method.ControllerAdviceBean;
 import org.springframework.web.method.HandlerMethod;
@@ -88,9 +90,12 @@ public abstract class ScorpioDeferredController {
                 timeoutResponse);
         try {
             String requestNo = requestNoService.nextRequestNo();
+            ServletRequestAttributes servletRequestAttributes =
+                    (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+            RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
             DeferredRunnable<?, ?> deferredRunnable = new DeferredRunnable(
                     requestNo, deferredResult, serviceExecutor,
-                    isEnableRestMessage(), exceptionResolver);
+                    isEnableRestMessage(), httpServletRequest, httpServletResponse, exceptionResolver);
             // support spring security
             DelegatingSecurityContextAsyncTaskExecutor securityContextAsyncTaskExecutor =
                     new DelegatingSecurityContextAsyncTaskExecutor(threadPoolTaskExecutor, SecurityContextHolder.getContext());

@@ -7,7 +7,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  * @author seanjiang
- * @date 2019/12/25
+ * @since 2019/12/25
  */
 @NoRepositoryBean
 public interface ScorpioRepository<T extends ScorpioEntity>

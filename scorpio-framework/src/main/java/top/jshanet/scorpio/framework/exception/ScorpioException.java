@@ -4,7 +4,7 @@ import top.jshanet.scorpio.framework.status.ScorpioStatus;
 
 /**
  * @author seanjiang
- * @date 2019/12/25
+ * @since 2019/12/25
  */
 public class ScorpioException extends RuntimeException {
 

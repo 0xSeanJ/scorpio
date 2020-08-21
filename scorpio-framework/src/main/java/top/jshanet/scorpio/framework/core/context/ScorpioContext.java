@@ -5,11 +5,13 @@ import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
  * @author seanjiang
- * @date 2019/12/25
+ * @since  2019/12/25
  */
 @Getter
 @Setter
@@ -18,6 +20,10 @@ public class ScorpioContext implements SecurityContext {
     private String requestNo;
 
     private Authentication authentication;
+
+    private HttpServletRequest httpServletRequest;
+
+    private HttpServletResponse httpServletResponse;
 
 
     @Override

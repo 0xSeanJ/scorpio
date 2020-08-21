@@ -4,9 +4,12 @@ import org.springframework.security.core.Authentication;
 import top.jshanet.scorpio.framework.core.context.ScorpioContext;
 import top.jshanet.scorpio.framework.core.context.ScorpioContextHolder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author seanjiang
- * @date 2019/12/25
+ * @since 2019/12/25
  */
 public class ScorpioContextUtils {
 
@@ -58,6 +61,42 @@ public class ScorpioContextUtils {
             authentication = context.getAuthentication();
         }
         return authentication;
+    }
+
+    public static void setHttpServletRequest(HttpServletRequest httpServletRequest) {
+        ScorpioContext context = ScorpioContextHolder.getContext();
+        if (context == null) {
+            context = new ScorpioContext();
+            ScorpioContextHolder.setContext(context);
+        }
+        context.setHttpServletRequest(httpServletRequest);
+    }
+
+    public static HttpServletRequest getHttpServletRequest() {
+        ScorpioContext context = ScorpioContextHolder.getContext();
+        HttpServletRequest httpServletRequest = null;
+        if (context != null) {
+            httpServletRequest = context.getHttpServletRequest();
+        }
+        return httpServletRequest;
+    }
+
+    public static void setHttpServletResponse(HttpServletResponse httpServletResponse) {
+        ScorpioContext context = ScorpioContextHolder.getContext();
+        if (context == null) {
+            context = new ScorpioContext();
+            ScorpioContextHolder.setContext(context);
+        }
+        context.setHttpServletResponse(httpServletResponse);
+    }
+
+    public static HttpServletResponse getHttpServletResponse() {
+        ScorpioContext context = ScorpioContextHolder.getContext();
+        HttpServletResponse httpServletResponse = null;
+        if (context != null) {
+            httpServletResponse = context.getHttpServletResponse();
+        }
+        return httpServletResponse;
     }
 
     public static String getUsername() {
