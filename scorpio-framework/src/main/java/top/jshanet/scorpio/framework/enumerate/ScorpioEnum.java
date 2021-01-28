@@ -27,3 +27,4 @@ public interface ScorpioEnum {
         return (ScorpioEnum) value;
     }
 }
+i
